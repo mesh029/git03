@@ -181,28 +181,28 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
         );
       },
       child: Container(
-        width: 271,
-        height: 166,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
+      width: 271,
+      height: 166,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Property image
               Container(
                 width: 80,
-                height: 140,
+                height: 138,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: const Color(0xFFC4C4C4),
@@ -259,6 +259,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Title
                     Text(
@@ -271,7 +272,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     // Type description
                     Text(
                       type.description,
@@ -280,6 +281,8 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                         fontWeight: FontWeight.w400,
                         color: const Color(0xFF6B7280),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     // Rating stars
@@ -305,7 +308,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                         color: const Color(0xFFAEAEAE),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     // Price
                     Text(
                       price,

@@ -193,43 +193,111 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                         children: [
                           // Fresh Keja - Highlighted
-                          _buildServiceCard(
-                            Icons.local_laundry_service,
-                            'Fresh Keja',
-                            const Color(0xFF8B5CF6),
-                            isActive: true,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.laundry,
+                                    data: {'service': 'Fresh Keja'},
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildServiceCard(
+                              Icons.local_laundry_service,
+                              'Fresh Keja',
+                              const Color(0xFF8B5CF6),
+                              isActive: true,
+                            ),
                           ),
                           const SizedBox(width: 25),
                           // Keja by JuaX - Highlighted
-                          _buildServiceCard(
-                            Icons.home,
-                            'Keja by JuaX',
-                            const Color(0xFF0373F3),
-                            isActive: true,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.properties,
+                                    data: {'service': 'Keja by JuaX', 'type': 'all'},
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildServiceCard(
+                              Icons.home,
+                              'Keja by JuaX',
+                              const Color(0xFF0373F3),
+                              isActive: true,
+                            ),
                           ),
                           const SizedBox(width: 25),
                           // RideX - Dev mode
-                          _buildServiceCard(
-                            Icons.directions_car,
-                            'RideX',
-                            const Color(0xFF9CA3AF),
-                            isActive: false,
+                          GestureDetector(
+                            onTap: () {
+                              if (false) { // Disabled for now
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.rides,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: _buildServiceCard(
+                              Icons.directions_car,
+                              'RideX',
+                              const Color(0xFF9CA3AF),
+                              isActive: false,
+                            ),
                           ),
                           const SizedBox(width: 25),
                           // TukTuk Express - Dev mode
-                          _buildServiceCard(
-                            Icons.moped,
-                            'TukTuk Express',
-                            const Color(0xFF9CA3AF),
-                            isActive: false,
+                          GestureDetector(
+                            onTap: () {
+                              if (false) { // Disabled for now
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.rides,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: _buildServiceCard(
+                              Icons.moped,
+                              'TukTuk Express',
+                              const Color(0xFF9CA3AF),
+                              isActive: false,
+                            ),
                           ),
                           const SizedBox(width: 25),
                           // CycleX - Dev mode
-                          _buildServiceCard(
-                            Icons.two_wheeler,
-                            'CycleX',
-                            const Color(0xFF9CA3AF),
-                            isActive: false,
+                          GestureDetector(
+                            onTap: () {
+                              if (false) { // Disabled for now
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.rides,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: _buildServiceCard(
+                              Icons.two_wheeler,
+                              'CycleX',
+                              const Color(0xFF9CA3AF),
+                              isActive: false,
+                            ),
                           ),
                         ],
                       ),
