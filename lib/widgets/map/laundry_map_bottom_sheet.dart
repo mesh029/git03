@@ -311,7 +311,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),

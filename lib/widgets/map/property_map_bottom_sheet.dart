@@ -74,7 +74,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
@@ -197,11 +197,11 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
       width: 271,
       height: 166,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -232,7 +232,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                             color: const Color(0xFFC4C4C4),
                             child: const Icon(
                               Icons.image,
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                               size: 32,
                             ),
                           );
@@ -258,7 +258,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                             style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                             ),
                           ),
                         ),
@@ -280,7 +280,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -328,7 +328,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black,
                       ),
                     ),
                   ],
@@ -342,7 +342,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                   shape: BoxShape.circle,
                   color: isFavorited
                       ? const Color(0xFFEC4899).withValues(alpha: 0.1)
-                      : Colors.white,
+                      : Theme.of(context).cardColor,
                   border: Border.all(
                     color: isFavorited
                         ? const Color(0xFFEC4899)

@@ -441,7 +441,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Theme.of(context).cardColor,
+                  color: Colors.white,
                 ),
               ),
             ),

@@ -227,7 +227,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -257,7 +257,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   ),
                   child: const Icon(
                     Icons.tune,
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     size: 20,
                   ),
                 ),
@@ -288,7 +288,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   blurRadius: 20,
                   offset: const Offset(0, 4),
                 ),

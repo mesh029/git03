@@ -56,7 +56,7 @@ class MapScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
       ),
       child: Image.network(
@@ -64,12 +64,12 @@ class MapScreen extends StatelessWidget {
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
           return Container(
-            color: const Color(0xFFE5E7EB),
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.map,
                     size: 64,
                     color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
@@ -79,7 +79,7 @@ class MapScreen extends StatelessWidget {
                     'Map View',
                     style: GoogleFonts.poppins(
                       fontSize: 16,
-                      color: const Color(0xFF9CA3AF),
+                      color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                     ),
                   ),
                 ],
