@@ -6,6 +6,7 @@ import 'property_detail_screen.dart';
 import 'fresh_keja_service_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../widgets/search_bar_widget.dart';
 import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -147,62 +148,8 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // Search bar and filter
-                    Row(
-                      children: [
-                        // Search bar
-                        Expanded(
-                          child: Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFFE9E9E9),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 18),
-                                Icon(
-                                  Icons.search,
-                                  size: 24,
-                                  color: const Color(0xFFA9A9A9),
-                                ),
-                                const SizedBox(width: 11),
-                                Expanded(
-                                  child: Text(
-                                    'Where are you going or what do you need?',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                      color: const Color(0xFFA9A9A9),
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 17),
-                        // Filter button
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFF0373F3),
-                          ),
-                          child: const Icon(
-                            Icons.tune,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Search bar with filter
+                    const SearchBarWidget(),
                   ],
                 ),
               ),
