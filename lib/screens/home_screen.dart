@@ -537,14 +537,15 @@ class HomeScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => const MapScreen(
-                                          mode: MapMode.laundry,
+                                          mode: MapMode.cleaning,
+                                          data: {'service': 'Elite Cleaning'},
                                         ),
                                       ),
                                     );
                                   },
                                   child: _buildFeaturedServiceCard(
                                     'Elite Cleaning',
-                                    'Available now',
+                                    'House cleaning',
                                     '4.7',
                                     Icons.cleaning_services,
                                     const Color(0xFF8B5CF6),

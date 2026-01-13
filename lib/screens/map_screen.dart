@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/map_mode.dart';
 import '../widgets/map/property_map_bottom_sheet.dart';
 import '../widgets/map/laundry_map_bottom_sheet.dart';
+import '../widgets/map/cleaning_map_bottom_sheet.dart';
 import '../widgets/map/ride_map_bottom_sheet.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import 'home_screen.dart';
@@ -142,6 +143,9 @@ class MapScreen extends StatelessWidget {
       case MapMode.laundry:
         pinColor = const Color(0xFF8B5CF6); // Purple for laundry
         break;
+      case MapMode.cleaning:
+        pinColor = const Color(0xFF8B5CF6); // Purple for cleaning (same brand)
+        break;
       case MapMode.rides:
         pinColor = const Color(0xFF10B981); // Green for rides
         break;
@@ -264,6 +268,8 @@ class MapScreen extends StatelessWidget {
         return 'Search properties...';
       case MapMode.laundry:
         return 'Search pickup stations...';
+      case MapMode.cleaning:
+        return 'Search service location...';
       case MapMode.rides:
         return 'Search location...';
     }
@@ -274,6 +280,8 @@ class MapScreen extends StatelessWidget {
       case MapMode.properties:
         return const Color(0xFF0373F3);
       case MapMode.laundry:
+        return const Color(0xFF8B5CF6);
+      case MapMode.cleaning:
         return const Color(0xFF8B5CF6);
       case MapMode.rides:
         return const Color(0xFF10B981);
@@ -332,6 +340,8 @@ class MapScreen extends StatelessWidget {
         return PropertyMapBottomSheet(data: data);
       case MapMode.laundry:
         return LaundryMapBottomSheet(data: data);
+      case MapMode.cleaning:
+        return CleaningMapBottomSheet(data: data);
       case MapMode.rides:
         return RideMapBottomSheet(data: data);
     }

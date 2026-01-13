@@ -6,6 +6,9 @@ enum MapMode {
   /// Laundry service with pickup location selection (Fresh Keja)
   laundry,
   
+  /// House cleaning service (Fresh Keja)
+  cleaning,
+  
   /// Ride booking with from/to locations (RideX - future)
   rides,
 }
@@ -29,6 +32,8 @@ extension MapModeExtension on MapMode {
         return 'Location targeting';
       case MapMode.laundry:
         return 'Select pickup location';
+      case MapMode.cleaning:
+        return 'Select service location';
       case MapMode.rides:
         return 'Book a ride';
     }
