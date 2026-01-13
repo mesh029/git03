@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'map_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -337,12 +338,22 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 23.0),
                       child: Column(
                         children: [
-                          // Featured property (large card)
-                          _buildFeaturedPropertyCard(
-                            '3BR Apartment',
-                            'Milimani',
-                            'KSh 15,000/month',
-                            '4.8',
+                          // Featured property (large card) - tappable to map
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(),
+                                ),
+                              );
+                            },
+                            child: _buildFeaturedPropertyCard(
+                              '3BR Apartment',
+                              'Milimani',
+                              'KSh 15,000/month',
+                              '4.8',
+                            ),
                           ),
                           const SizedBox(height: 12),
                           // Service providers (smaller cards)
