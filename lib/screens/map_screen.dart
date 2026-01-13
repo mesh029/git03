@@ -4,6 +4,8 @@ import '../models/map_mode.dart';
 import '../widgets/map/property_map_bottom_sheet.dart';
 import '../widgets/map/laundry_map_bottom_sheet.dart';
 import '../widgets/map/ride_map_bottom_sheet.dart';
+import '../widgets/bottom_navigation_bar.dart';
+import 'home_screen.dart';
 
 class MapScreen extends StatelessWidget {
   final MapMode mode;
@@ -29,6 +31,21 @@ class MapScreen extends StatelessWidget {
           // Bottom section (dynamic based on mode)
           _buildBottomSection(context),
         ],
+      ),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 1, // Services tab active on map
+        onTap: (index) {
+          if (index == 0) {
+            // Navigate to home
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
+          } else {
+            // Handle other tabs (Services, Orders, Messages, Profile)
+            // TODO: Navigate to respective screens
+          }
+        },
       ),
     );
   }

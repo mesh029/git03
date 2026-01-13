@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'map_screen.dart';
 import '../models/map_mode.dart';
+import '../widgets/bottom_navigation_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -254,20 +255,46 @@ class HomeScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                         children: [
-                          _buildPopularServiceCard(
-                            'Fresh Keja',
-                            'laundry & house cleaning',
-                            '4.8',
-                            Icons.local_laundry_service,
-                            const Color(0xFF8B5CF6),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.laundry,
+                                    data: {'service': 'Fresh Keja'},
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildPopularServiceCard(
+                              'Fresh Keja',
+                              'laundry & house cleaning',
+                              '4.8',
+                              Icons.local_laundry_service,
+                              const Color(0xFF8B5CF6),
+                            ),
                           ),
                           const SizedBox(width: 25),
-                          _buildPopularServiceCard(
-                            'Keja by JuaX',
-                            'vacant houses & rentals',
-                            '4.9',
-                            Icons.home,
-                            const Color(0xFF0373F3),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.properties,
+                                    data: {'service': 'Keja by JuaX', 'type': 'all'},
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildPopularServiceCard(
+                              'Keja by JuaX',
+                              'BNBs & apartments',
+                              '4.9',
+                              Icons.home,
+                              const Color(0xFF0373F3),
+                            ),
                           ),
                         ],
                       ),
@@ -386,6 +413,11 @@ class HomeScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => const MapScreen(
                                     mode: MapMode.properties,
+                                    data: {
+                                      'property': '3BR Apartment',
+                                      'location': 'Milimani',
+                                      'type': 'apartment',
+                                    },
                                   ),
                                 ),
                               );
@@ -514,7 +546,15 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: AppBottomNavigationBar(
+        currentIndex: 0,
+        onTap: (index) {
+          // Handle navigation
+          if (index == 1) {
+            // Services - could navigate to services screen
+          }
+        },
+      ),
     );
   }
 
@@ -1044,65 +1084,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Container(
-          height: 100,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: _buildNavItem(Icons.home, 'Home', true)),
-              Expanded(child: _buildNavItem(Icons.build_circle, 'Services', false)),
-              Expanded(child: _buildNavItem(Icons.receipt_long, 'Orders', false)),
-              Expanded(child: _buildNavItem(Icons.message, 'Messages', false)),
-              Expanded(child: _buildNavItem(Icons.person, 'Profile', false)),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return GestureDetector(
-      onTap: () {},
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? const Color(0xFF0373F3) : const Color(0xFFBCBCBC),
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: isActive ? const Color(0xFF0373F3) : const Color(0xFFBCBCBC),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
 }
