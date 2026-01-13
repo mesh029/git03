@@ -124,6 +124,13 @@ class MapScreen extends StatelessWidget {
           const Offset(280, 350),
           const Offset(100, 400),
         ];
+      case MapMode.cleaning:
+        // Cleaning service locations
+        return [
+          const Offset(120, 220),
+          const Offset(250, 300),
+          const Offset(180, 380),
+        ];
       case MapMode.rides:
         // Ride pickup points
         return [
