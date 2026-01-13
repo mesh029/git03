@@ -148,10 +148,10 @@ class MapScreen extends StatelessWidget {
         pinColor = const Color(0xFF0373F3); // Blue for properties
         break;
       case MapMode.laundry:
-        pinColor = const Color(0xFF8B5CF6); // Purple for laundry
+        pinColor = const Color(0xFF0373F3); // Purple for laundry
         break;
       case MapMode.cleaning:
-        pinColor = const Color(0xFF8B5CF6); // Purple for cleaning (same brand)
+        pinColor = const Color(0xFF0373F3); // Purple for cleaning (same brand)
         break;
       case MapMode.rides:
         pinColor = const Color(0xFF10B981); // Green for rides
@@ -287,9 +287,9 @@ class MapScreen extends StatelessWidget {
       case MapMode.properties:
         return const Color(0xFF0373F3);
       case MapMode.laundry:
-        return const Color(0xFF8B5CF6);
+        return const Color(0xFF0373F3);
       case MapMode.cleaning:
-        return const Color(0xFF8B5CF6);
+        return const Color(0xFF0373F3);
       case MapMode.rides:
         return const Color(0xFF10B981);
     }

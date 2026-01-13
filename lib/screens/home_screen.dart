@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'map_screen.dart';
 import 'property_detail_screen.dart';
+import 'fresh_keja_service_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -85,23 +88,61 @@ class HomeScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Profile avatar
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFF0373F3).withOpacity(0.1),
-                            border: Border.all(
-                              color: const Color(0xFF0373F3).withOpacity(0.3),
-                              width: 2,
+                        // Dark mode toggle and profile
+                        Row(
+                          children: [
+                            // Dark mode toggle
+                            Consumer<ThemeProvider>(
+                              builder: (context, themeProvider, _) {
+                                return Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context).cardColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.05),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      themeProvider.isDarkMode
+                                          ? Icons.light_mode
+                                          : Icons.dark_mode,
+                                      color: Theme.of(context).iconTheme.color,
+                                      size: 20,
+                                    ),
+                                    onPressed: () {
+                                      themeProvider.toggleTheme();
+                                    },
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                          child: const Icon(
-                            Icons.person,
-                            color: Color(0xFF0373F3),
-                            size: 28,
-                          ),
+                            const SizedBox(width: 12),
+                            // Profile avatar
+                            Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color(0xFF0373F3).withValues(alpha: 0.1),
+                                border: Border.all(
+                                  color: const Color(0xFF0373F3).withValues(alpha: 0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                color: Color(0xFF0373F3),
+                                size: 28,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -199,17 +240,14 @@ class HomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.laundry,
-                                    data: {'service': 'Fresh Keja'},
-                                  ),
+                                  builder: (context) => const FreshKejaServiceScreen(),
                                 ),
                               );
                             },
                             child: _buildServiceCard(
                               Icons.local_laundry_service,
                               'Fresh Keja',
-                              const Color(0xFF8B5CF6),
+                              const Color(0xFF0373F3),
                               isActive: true,
                             ),
                           ),
@@ -341,7 +379,7 @@ class HomeScreen extends StatelessWidget {
                               'laundry & house cleaning',
                               '4.8',
                               Icons.local_laundry_service,
-                              const Color(0xFF8B5CF6),
+                              const Color(0xFF0373F3),
                             ),
                           ),
                           const SizedBox(width: 25),
@@ -525,7 +563,7 @@ class HomeScreen extends StatelessWidget {
                                     'Same-day service',
                                     '4.9',
                                     Icons.local_laundry_service,
-                                    const Color(0xFF8B5CF6),
+                                    const Color(0xFF0373F3),
                                   ),
                                 ),
                               ),
@@ -548,7 +586,7 @@ class HomeScreen extends StatelessWidget {
                                     'House cleaning',
                                     '4.7',
                                     Icons.cleaning_services,
-                                    const Color(0xFF8B5CF6),
+                                    const Color(0xFF0373F3),
                                   ),
                                 ),
                               ),
@@ -590,7 +628,7 @@ class HomeScreen extends StatelessWidget {
                             child: _buildQuickActionCard(
                               Icons.local_laundry_service,
                               'Book Fresh Keja service',
-                              const Color(0xFF8B5CF6),
+                              const Color(0xFF0373F3),
                             ),
                           ),
                           const SizedBox(height: 12),

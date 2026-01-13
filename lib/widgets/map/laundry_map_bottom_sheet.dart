@@ -128,12 +128,12 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFFE5E7EB),
             width: isSelected ? 2 : 1,
           ),
@@ -143,7 +143,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF8B5CF6)
+                  ? const Color(0xFF0373F3)
                   : const Color(0xFF9CA3AF),
               size: 24,
             ),
@@ -154,7 +154,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFF8B5CF6)
+                    ? const Color(0xFF0373F3)
                     : const Color(0xFF6B7280),
               ),
             ),
@@ -197,12 +197,12 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+                      ? const Color(0xFF0373F3).withValues(alpha: 0.1)
                       : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? const Color(0xFF8B5CF6)
+                        ? const Color(0xFF0373F3)
                         : const Color(0xFFE5E7EB),
                     width: isSelected ? 2 : 1,
                   ),
@@ -212,7 +212,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                     Icon(
                       Icons.store,
                       color: isSelected
-                          ? const Color(0xFF8B5CF6)
+                          ? const Color(0xFF0373F3)
                           : const Color(0xFF9CA3AF),
                     ),
                     const SizedBox(width: 12),
@@ -241,7 +241,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                     if (isSelected)
                       const Icon(
                         Icons.check_circle,
-                        color: Color(0xFF8B5CF6),
+                        color: Color(0xFF0373F3),
                       ),
                   ],
                 ),
@@ -272,6 +272,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
                 child: _buildMethodTab(
@@ -322,7 +323,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF8B5CF6)
+                  ? const Color(0xFF0373F3)
                   : const Color(0xFF9CA3AF),
               size: 20,
             ),
@@ -333,7 +334,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected
-                    ? const Color(0xFF8B5CF6)
+                    ? const Color(0xFF0373F3)
                     : const Color(0xFF6B7280),
               ),
             ),
@@ -389,7 +390,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                color: const Color(0xFF0373F3).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -408,7 +409,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF8B5CF6),
+                      color: const Color(0xFF0373F3),
                     ),
                   ),
                 ],
@@ -429,32 +430,41 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Icon(icon, size: 20, color: const Color(0xFF6B7280)),
-            const SizedBox(width: 12),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
+        Expanded(
+          child: Row(
+            children: [
+              Icon(icon, size: 20, color: const Color(0xFF6B7280)),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  label,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        const SizedBox(width: 8),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
               icon: const Icon(Icons.remove_circle_outline),
               onPressed: value > 0
                   ? () => onChanged(value - 1)
                   : null,
-              color: const Color(0xFF8B5CF6),
+              color: const Color(0xFF0373F3),
               iconSize: 24,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
             Container(
-              width: 40,
+              width: 36,
               alignment: Alignment.center,
               child: Text(
                 '$value',
@@ -468,8 +478,10 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () => onChanged(value + 1),
-              color: const Color(0xFF8B5CF6),
+              color: const Color(0xFF0373F3),
               iconSize: 24,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
             ),
           ],
         ),
@@ -501,7 +513,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                  color: const Color(0xFF0373F3).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -509,7 +521,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF8B5CF6),
+                    color: const Color(0xFF0373F3),
                   ),
                 ),
               ),
@@ -521,7 +533,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             min: 0.5,
             max: 50.0,
             divisions: 99,
-            activeColor: const Color(0xFF8B5CF6),
+            activeColor: const Color(0xFF0373F3),
             onChanged: (value) {
               setState(() {
                 _weightKg = value;
@@ -600,19 +612,19 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFFE5E7EB),
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Column(
           children: [
-            Icon(icon, color: const Color(0xFF8B5CF6), size: 24),
+            Icon(icon, color: const Color(0xFF0373F3), size: 24),
             const SizedBox(height: 8),
             Text(
               label,
@@ -646,7 +658,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+        color: const Color(0xFF0373F3).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -668,7 +680,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF8B5CF6),
+                  color: const Color(0xFF0373F3),
                 ),
               ),
             ],
@@ -712,7 +724,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
               }
             : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF8B5CF6),
+          backgroundColor: const Color(0xFF0373F3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),

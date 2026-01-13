@@ -114,12 +114,12 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFFE5E7EB),
             width: isSelected ? 2 : 1,
           ),
@@ -129,7 +129,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF8B5CF6)
+                  ? const Color(0xFF0373F3)
                   : const Color(0xFF9CA3AF),
               size: 24,
             ),
@@ -140,7 +140,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFF8B5CF6)
+                    ? const Color(0xFF0373F3)
                     : const Color(0xFF6B7280),
               ),
             ),
@@ -166,7 +166,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             color: const Color(0xFF9CA3AF),
           ),
           border: InputBorder.none,
-          prefixIcon: const Icon(Icons.location_on, color: Color(0xFF8B5CF6)),
+          prefixIcon: const Icon(Icons.location_on, color: Color(0xFF0373F3)),
         ),
       ),
     );
@@ -234,12 +234,12 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFFE5E7EB),
             width: isSelected ? 2 : 1,
           ),
@@ -250,7 +250,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
               icons[service],
               size: 20,
               color: isSelected
-                  ? const Color(0xFF8B5CF6)
+                  ? const Color(0xFF0373F3)
                   : const Color(0xFF9CA3AF),
             ),
             const SizedBox(width: 8),
@@ -261,7 +261,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: isSelected
-                      ? const Color(0xFF8B5CF6)
+                      ? const Color(0xFF0373F3)
                       : Colors.black,
                 ),
               ),
@@ -270,7 +270,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
               const Icon(
                 Icons.check_circle,
                 size: 18,
-                color: Color(0xFF8B5CF6),
+                color: Color(0xFF0373F3),
               ),
           ],
         ),
@@ -322,12 +322,12 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
               : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFFE5E7EB),
             width: isSelected ? 2 : 1,
           ),
@@ -339,7 +339,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             fontSize: 14,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             color: isSelected
-                ? const Color(0xFF8B5CF6)
+                ? const Color(0xFF0373F3)
                 : const Color(0xFF6B7280),
           ),
         ),
@@ -361,7 +361,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+        color: const Color(0xFF0373F3).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -383,7 +383,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF8B5CF6),
+                  color: const Color(0xFF0373F3),
                 ),
               ),
             ],
@@ -437,7 +437,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
               }
             : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF8B5CF6),
+          backgroundColor: const Color(0xFF0373F3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
