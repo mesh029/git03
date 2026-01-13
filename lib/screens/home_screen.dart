@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'map_screen.dart';
+import '../models/map_mode.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -291,29 +292,68 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: _buildServiceAreaCard(
-                              'Milimani',
-                              12,
-                              8,
-                              'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.properties,
+                                      data: {'area': 'Milimani'},
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: _buildServiceAreaCard(
+                                'Milimani',
+                                12,
+                                8,
+                                'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
+                              ),
                             ),
                           ),
                           const SizedBox(width: 25),
                           Expanded(
-                            child: _buildServiceAreaCard(
-                              'Town Center',
-                              24,
-                              15,
-                              'https://www.figma.com/api/mcp/asset/36b3c108-6c7b-47dd-8836-3cfe30bafb86',
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.properties,
+                                      data: {'area': 'Town Center'},
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: _buildServiceAreaCard(
+                                'Town Center',
+                                24,
+                                15,
+                                'https://www.figma.com/api/mcp/asset/36b3c108-6c7b-47dd-8836-3cfe30bafb86',
+                              ),
                             ),
                           ),
                           const SizedBox(width: 25),
                           Expanded(
-                            child: _buildServiceAreaCard(
-                              'Nyalenda',
-                              18,
-                              12,
-                              'https://www.figma.com/api/mcp/asset/8cc9e310-660f-4428-a71a-c224d2279138',
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const MapScreen(
+                                      mode: MapMode.properties,
+                                      data: {'area': 'Nyalenda'},
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: _buildServiceAreaCard(
+                                'Nyalenda',
+                                18,
+                                12,
+                                'https://www.figma.com/api/mcp/asset/8cc9e310-660f-4428-a71a-c224d2279138',
+                              ),
                             ),
                           ),
                         ],
@@ -344,7 +384,9 @@ class HomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapScreen(),
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.properties,
+                                  ),
                                 ),
                               );
                             },
@@ -360,22 +402,46 @@ class HomeScreen extends StatelessWidget {
                           Row(
                             children: [
                               Expanded(
-                                child: _buildFeaturedServiceCard(
-                                  'Fresh Keja Pro',
-                                  'Same-day service',
-                                  '4.9',
-                                  Icons.local_laundry_service,
-                                  const Color(0xFF8B5CF6),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MapScreen(
+                                          mode: MapMode.laundry,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildFeaturedServiceCard(
+                                    'Fresh Keja Pro',
+                                    'Same-day service',
+                                    '4.9',
+                                    Icons.local_laundry_service,
+                                    const Color(0xFF8B5CF6),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: _buildFeaturedServiceCard(
-                                  'Elite Cleaning',
-                                  'Available now',
-                                  '4.7',
-                                  Icons.cleaning_services,
-                                  const Color(0xFF8B5CF6),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const MapScreen(
+                                          mode: MapMode.laundry,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildFeaturedServiceCard(
+                                    'Elite Cleaning',
+                                    'Available now',
+                                    '4.7',
+                                    Icons.cleaning_services,
+                                    const Color(0xFF8B5CF6),
+                                  ),
                                 ),
                               ),
                             ],
@@ -402,16 +468,40 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 23.0),
                       child: Column(
                         children: [
-                          _buildQuickActionCard(
-                            Icons.local_laundry_service,
-                            'Book Fresh Keja service',
-                            const Color(0xFF8B5CF6),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.laundry,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildQuickActionCard(
+                              Icons.local_laundry_service,
+                              'Book Fresh Keja service',
+                              const Color(0xFF8B5CF6),
+                            ),
                           ),
                           const SizedBox(height: 12),
-                          _buildQuickActionCard(
-                            Icons.home,
-                            'Find vacant houses & rentals',
-                            const Color(0xFF0373F3),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MapScreen(
+                                    mode: MapMode.properties,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: _buildQuickActionCard(
+                              Icons.home,
+                              'Find vacant houses & rentals',
+                              const Color(0xFF0373F3),
+                            ),
                           ),
                         ],
                       ),
