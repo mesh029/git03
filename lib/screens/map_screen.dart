@@ -252,9 +252,9 @@ class MapScreen extends StatelessWidget {
     String rating,
     String priceLabel,
     String price,
-    String imageUrl,
-    {bool isFavorited = false},
-  ) {
+    String imageUrl, {
+    bool isFavorited = false,
+  }) {
     return Container(
       width: 271,
       height: 166,
