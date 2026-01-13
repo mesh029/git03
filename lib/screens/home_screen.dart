@@ -294,8 +294,7 @@ class HomeScreen extends StatelessWidget {
                               'Milimani',
                               12,
                               8,
-                              Icons.location_city,
-                              const Color(0xFF0373F3),
+                              'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
                             ),
                           ),
                           const SizedBox(width: 25),
@@ -304,8 +303,7 @@ class HomeScreen extends StatelessWidget {
                               'Town Center',
                               24,
                               15,
-                              Icons.business,
-                              const Color(0xFF10B981),
+                              'https://www.figma.com/api/mcp/asset/36b3c108-6c7b-47dd-8836-3cfe30bafb86',
                             ),
                           ),
                           const SizedBox(width: 25),
@@ -314,8 +312,7 @@ class HomeScreen extends StatelessWidget {
                               'Nyalenda',
                               18,
                               12,
-                              Icons.home,
-                              const Color(0xFFF59E0B),
+                              'https://www.figma.com/api/mcp/asset/8cc9e310-660f-4428-a71a-c224d2279138',
                             ),
                           ),
                         ],
@@ -576,19 +573,17 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Service Area cards - using exact Figma dimensions: 142x200
+  // Service Area cards with image backgrounds - using exact Figma dimensions: 142x200
   Widget _buildServiceAreaCard(
     String neighborhood,
     int propertyCount,
     int serviceProviderCount,
-    IconData icon,
-    Color color,
+    String imageUrl,
   ) {
     return Container(
       width: 142,
       height: 200,
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
@@ -598,75 +593,102 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Stack(
+          fit: StackFit.expand,
           children: [
+            // Background image
+            Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: const Color(0xFFC4C4C4),
+                  child: const Icon(
+                    Icons.image,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                );
+              },
+            ),
+            // Gradient overlay for better text readability
             Container(
-              width: 56,
-              height: 56,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 28,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.7),
+                  ],
+                ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  neighborhood,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
+            // Content overlay
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Top spacing
+                  const SizedBox(),
+                  // Bottom content
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        neighborhood,
+                        style: GoogleFonts.andika(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.home,
+                            size: 12,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$propertyCount properties',
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.local_laundry_service,
+                            size: 12,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '$serviceProviderCount providers',
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.home,
-                      size: 14,
-                      color: const Color(0xFF0373F3),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$propertyCount properties',
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.local_laundry_service,
-                      size: 14,
-                      color: const Color(0xFF8B5CF6),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$serviceProviderCount providers',
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF6B7280),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
