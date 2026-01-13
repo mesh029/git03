@@ -1,6 +1,6 @@
 /// Enum representing different map service modes
 enum MapMode {
-  /// Property search and location targeting (Keja by JuaX)
+  /// Property search and location targeting (Saka Keja)
   properties,
   
   /// Laundry service with pickup location selection (Fresh Keja)

@@ -214,7 +214,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 25),
-                          // Keja by JuaX - Highlighted
+                          // Saka Keja - Highlighted
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -222,14 +222,14 @@ class HomeScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => const MapScreen(
                                     mode: MapMode.properties,
-                                    data: {'service': 'Keja by JuaX', 'type': 'all'},
+                                    data: {'service': 'Saka Keja', 'type': 'all'},
                                   ),
                                 ),
                               );
                             },
                             child: _buildServiceCard(
                               Icons.home,
-                              'Keja by JuaX',
+                              'Saka Keja',
                               const Color(0xFF0373F3),
                               isActive: true,
                             ),
@@ -352,13 +352,13 @@ class HomeScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => const MapScreen(
                                     mode: MapMode.properties,
-                                    data: {'service': 'Keja by JuaX', 'type': 'all'},
+                                    data: {'service': 'Saka Keja', 'type': 'all'},
                                   ),
                                 ),
                               );
                             },
                             child: _buildPopularServiceCard(
-                              'Keja by JuaX',
+                              'Saka Keja',
                               'BNBs & apartments',
                               '4.9',
                               Icons.home,
