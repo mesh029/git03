@@ -18,7 +18,7 @@
 ### Option A: Service-Focused Approach (Recommended)
 
 #### Replace "Popular Locations" → **"Service Areas"** or **"Coverage Zones"**
-**Purpose**: Show neighborhoods in Kisumu where Fresh Keja and Keja by JuaX operate
+**Purpose**: Show neighborhoods in Kisumu where Fresh Keja and Saka Keja operate
 
 **Content**:
 - Milimani (12 properties, 8 providers)
@@ -31,7 +31,7 @@
 **Purpose**: Show real, actionable content
 
 **Content Options**:
-1. **For Keja by JuaX**: Featured properties (3-bedroom in Milimani, 2-bedroom near CBD)
+1. **For Saka Keja**: Featured properties (3-bedroom in Milimani, 2-bedroom near CBD)
 2. **For Fresh Keja**: Active service providers or recent bookings
 3. **Combined**: Mix of both with clear visual distinction
 
@@ -39,7 +39,7 @@
 
 ---
 
-### Option B: Property-Focused Approach (If Keja by JuaX is primary)
+### Option B: Property-Focused Approach (If Saka Keja is primary)
 
 #### Replace "Popular Locations" → **"Popular Neighborhoods"**
 **Purpose**: Help users discover properties by area
@@ -99,7 +99,7 @@ Show Kisumu neighborhoods with service density:
 Show a mix of both services with clear visual distinction:
 
 **Layout**:
-- Large featured property card (Keja by JuaX)
+- Large featured property card (Saka Keja)
 - 2 smaller Fresh Keja service provider cards
 - Or: Tabs to switch between "Properties" and "Services"
 
