@@ -59,7 +59,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 color: Colors.white.withValues(alpha: 0.9),
               ),
               child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -73,7 +73,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 child: IconButton(
                   icon: Icon(
                     _isFavorited ? Icons.favorite : Icons.favorite_border,
-                    color: _isFavorited ? const Color(0xFFEC4899) : Colors.black,
+                    color: _isFavorited ? const Color(0xFFEC4899) : Theme.of(context).iconTheme.color,
                   ),
                   onPressed: () {
                     setState(() {
@@ -89,7 +89,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   color: Colors.white.withValues(alpha: 0.9),
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.share, color: Colors.black),
+                  icon: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
                   onPressed: () {},
                 ),
               ),
@@ -147,7 +147,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -187,7 +187,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -221,7 +221,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -241,7 +241,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -253,7 +253,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -384,7 +384,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 style: GoogleFonts.poppins(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                 ),
               ),
             ],

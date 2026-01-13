@@ -16,7 +16,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _showSuggestions = false;
-  String _selectedFilter = 'all'; // 'all', 'properties', 'services', 'areas'
+  bool _isScrolling = false;
 
   // Relevant search suggestions based on app content
   final List<Map<String, dynamic>> _searchSuggestions = [
@@ -51,7 +51,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       if (query.isEmpty) {
-        _filteredSuggestions = _getFilteredSuggestions(_selectedFilter);
+        _filteredSuggestions = _searchSuggestions;
       } else {
         _filteredSuggestions = _searchSuggestions
             .where((item) =>
@@ -59,18 +59,18 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 item['subtitle'].toString().toLowerCase().contains(query))
             .toList();
       }
+      // Keep suggestions visible when typing
+      if (_focusNode.hasFocus) {
+        _showSuggestions = _filteredSuggestions.isNotEmpty;
+      }
     });
   }
 
   void _onFocusChanged() {
+    // Keep suggestions visible if focus is on search field or if user is scrolling
     setState(() {
-      _showSuggestions = _focusNode.hasFocus;
+      _showSuggestions = _focusNode.hasFocus || (_isScrolling && _filteredSuggestions.isNotEmpty);
     });
-  }
-
-  List<Map<String, dynamic>> _getFilteredSuggestions(String filter) {
-    if (filter == 'all') return _searchSuggestions;
-    return _searchSuggestions.where((item) => item['type'] == filter).toList();
   }
 
   void _handleSuggestionTap(Map<String, dynamic> suggestion) {
@@ -161,61 +161,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     });
   }
 
-  void _showFilterDialog() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Filter by',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildFilterOption('All', 'all', Icons.apps),
-            _buildFilterOption('Properties', 'properties', Icons.home),
-            _buildFilterOption('Services', 'services', Icons.build_circle),
-            _buildFilterOption('Areas', 'areas', Icons.location_on),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterOption(String label, String value, IconData icon) {
-    final isSelected = _selectedFilter == value;
-    return ListTile(
-      leading: Icon(icon, color: isSelected ? const Color(0xFF0373F3) : Theme.of(context).iconTheme.color),
-      title: Text(
-        label,
-        style: GoogleFonts.poppins(
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          color: isSelected ? const Color(0xFF0373F3) : Theme.of(context).textTheme.titleMedium?.color,
-        ),
-      ),
-      trailing: isSelected
-          ? const Icon(Icons.check_circle, color: Color(0xFF0373F3))
-          : null,
-      onTap: () {
-        setState(() {
-          _selectedFilter = value;
-          _filteredSuggestions = _getFilteredSuggestions(value);
-        });
-        Navigator.pop(context);
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -247,21 +192,6 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 color: Color(0xFF0373F3),
                 size: 24,
               ),
-              suffixIcon: GestureDetector(
-                onTap: _showFilterDialog,
-                child: Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0373F3),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.tune,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
@@ -281,50 +211,100 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         ),
         // Suggestions dropdown
         if (_showSuggestions && _filteredSuggestions.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            constraints: const BoxConstraints(maxHeight: 300),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: _filteredSuggestions.length,
-              itemBuilder: (context, index) {
-                final suggestion = _filteredSuggestions[index];
-                return ListTile(
-                  leading: Icon(
-                    _getIconForType(suggestion['type']),
-                    color: const Color(0xFF0373F3),
+          GestureDetector(
+            onTap: () {
+              // Prevent tap from dismissing dropdown
+            },
+            child: Container(
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
                   ),
-                  title: Text(
-                    suggestion['title'],
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.titleMedium?.color,
-                    ),
-                  ),
-                  subtitle: Text(
-                    suggestion['subtitle'],
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                    ),
-                  ),
-                  onTap: () => _handleSuggestionTap(suggestion),
-                );
-              },
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: _buildSuggestionsList(),
+              ),
             ),
           ),
       ],
+    );
+  }
+
+  Widget _buildSuggestionsList() {
+    // Calculate approximate height per item (ListTile with padding)
+    const double itemHeight = 72.0; // Approximate height per item
+    const double maxHeight = 300.0;
+    final int itemCount = _filteredSuggestions.length;
+    final double calculatedHeight = (itemCount * itemHeight).clamp(0.0, maxHeight);
+    final bool needsScrolling = (itemCount * itemHeight) > maxHeight;
+
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        // Track scrolling state to prevent dropdown from disappearing
+        if (notification is ScrollStartNotification) {
+          setState(() {
+            _isScrolling = true;
+          });
+        } else if (notification is ScrollEndNotification) {
+          // Small delay before allowing focus changes to hide suggestions
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (mounted) {
+              setState(() {
+                _isScrolling = false;
+              });
+            }
+          });
+        }
+        return false;
+      },
+      child: SizedBox(
+        height: calculatedHeight,
+        child: ListView.separated(
+          shrinkWrap: false,
+          physics: needsScrolling 
+              ? const BouncingScrollPhysics() 
+              : const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          itemCount: itemCount,
+          separatorBuilder: (context, index) => Divider(
+            height: 1,
+            color: Theme.of(context).dividerColor,
+          ),
+          itemBuilder: (context, index) {
+            final suggestion = _filteredSuggestions[index];
+            return ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              leading: Icon(
+                _getIconForType(suggestion['type']),
+                color: const Color(0xFF0373F3),
+              ),
+              title: Text(
+                suggestion['title'],
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.titleMedium?.color,
+                ),
+              ),
+              subtitle: Text(
+                suggestion['subtitle'],
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                ),
+              ),
+              onTap: () => _handleSuggestionTap(suggestion),
+            );
+          },
+        ),
+      ),
     );
   }
 

@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             // Top section with gradient
             Container(
-              constraints: const BoxConstraints(minHeight: 200, maxHeight: 250),
+              constraints: const BoxConstraints(minHeight: 200),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -678,7 +678,9 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: isActive ? Colors.black : const Color(0xFF9CA3AF),
+                    color: isActive 
+                        ? (Theme.of(context).textTheme.titleLarge?.color ?? Colors.black)
+                        : const Color(0xFF9CA3AF),
                   ),
                 ),
                 if (!isActive) ...[
@@ -755,7 +757,7 @@ class HomeScreen extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
               ),
             ),
             const SizedBox(height: 2),
@@ -764,7 +766,7 @@ class HomeScreen extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF6B7280),
+                color: Theme.of(context).textTheme.bodyMedium?.color ?? const Color(0xFF6B7280),
               ),
             ),
             const SizedBox(height: 6),
@@ -781,7 +783,7 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                   ),
                 ),
               ],
@@ -963,7 +965,7 @@ class HomeScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                    color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1084,7 +1086,7 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                 ],
@@ -1097,7 +1099,7 @@ class HomeScreen extends StatelessWidget {
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
+              color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
             ),
           ),
           const SizedBox(height: 2),
@@ -1151,7 +1153,7 @@ class HomeScreen extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
               ),
             ),
           ),
