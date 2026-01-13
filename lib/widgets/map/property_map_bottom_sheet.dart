@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/map_mode.dart';
+import '../../screens/property_detail_screen.dart';
 
 class PropertyMapBottomSheet extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -172,11 +173,23 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
   }) {
     return GestureDetector(
       onTap: () {
-        // TODO: Navigate to property details
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Viewing ${type.label}: $title'),
-            duration: const Duration(seconds: 1),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PropertyDetailScreen(
+              propertyId: title.toLowerCase().replaceAll(' ', '_'),
+              title: title,
+              location: 'Milimani, Kisumu',
+              price: price,
+              rating: rating,
+              type: type,
+              images: [
+                imageUrl,
+                'https://www.figma.com/api/mcp/asset/6c6f1a2c-1f4a-47f7-9bd2-70d2672373a4',
+                'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51',
+                'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
+              ],
+            ),
           ),
         );
       },

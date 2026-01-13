@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'map_screen.dart';
+import 'property_detail_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
@@ -473,19 +474,25 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 23.0),
                       child: Column(
                         children: [
-                          // Featured property (large card) - tappable to map
+                          // Featured property (large card) - tappable to detail screen
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.properties,
-                                    data: {
-                                      'property': '3BR Apartment',
-                                      'location': 'Milimani',
-                                      'type': 'apartment',
-                                    },
+                                  builder: (context) => PropertyDetailScreen(
+                                    propertyId: '3br_apartment_milimani',
+                                    title: '3BR Apartment',
+                                    location: 'Milimani, Kisumu',
+                                    price: 'KSh 15,000/month',
+                                    rating: '4.8',
+                                    type: PropertyType.apartment,
+                                    images: [
+                                      'https://www.figma.com/api/mcp/asset/6c6f1a2c-1f4a-47f7-9bd2-70d2672373a4',
+                                      'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51',
+                                      'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
+                                      'https://www.figma.com/api/mcp/asset/36b3c108-6c7b-47dd-8836-3cfe30bafb86',
+                                    ],
                                   ),
                                 ),
                               );
