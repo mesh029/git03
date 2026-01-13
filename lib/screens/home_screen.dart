@@ -825,7 +825,7 @@ class HomeScreen extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   color: const Color(0xFFC4C4C4),
-                  child: const Icon(
+                  child: Icon(
                     Icons.image,
                     color: Theme.of(context).cardColor,
                     size: 48,
