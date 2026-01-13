@@ -37,6 +37,7 @@ class JuaXApp extends StatelessWidget {
               ),
               scaffoldBackgroundColor: const Color(0xFF121212),
               cardColor: const Color(0xFF1E1E1E),
+              iconTheme: const IconThemeData(color: Colors.white),
               textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
               useMaterial3: true,
             ),

@@ -644,9 +644,11 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
   Widget _buildPriceEstimate() {
     double basePrice = 0;
     if (_inputMethod == QuantityInputMethod.items) {
-      basePrice = _totalItems * 50; // KSh 50 per item
+      // Item-based is more expensive due to mixed weights (heavy + light clothes)
+      basePrice = _totalItems * 80; // KSh 80 per item (more expensive)
     } else {
-      basePrice = _weightKg * 200; // KSh 200 per kg
+      // Weight-based is cheaper - straightforward pricing
+      basePrice = _weightKg * 150; // KSh 150 per kg (cheaper)
     }
     
     if (_serviceType == 'dry_clean') {

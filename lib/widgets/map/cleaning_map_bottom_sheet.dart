@@ -173,6 +173,15 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
   }
 
   Widget _buildServiceSelection() {
+    final servicePrices = {
+      'vacuuming': 500,
+      'seat_cleaning': 400,
+      'general_cleaning': 600,
+      'deep_cleaning': 1200,
+      'window_cleaning': 300,
+      'bathroom_cleaning': 500,
+    };
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -181,7 +190,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
         const SizedBox(height: 12),
@@ -192,20 +201,21 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 2.5,
+            childAspectRatio: 2.2,
           ),
           itemCount: _selectedServices.length,
           itemBuilder: (context, index) {
             final service = _selectedServices.keys.elementAt(index);
             final isSelected = _selectedServices[service]!;
-            return _buildServiceCheckbox(service, isSelected);
+            final price = servicePrices[service] ?? 0;
+            return _buildServiceCheckbox(service, isSelected, price);
           },
         ),
       ],
     );
   }
 
-  Widget _buildServiceCheckbox(String service, bool isSelected) {
+  Widget _buildServiceCheckbox(String service, bool isSelected, int price) {
     final labels = {
       'vacuuming': 'Vacuuming',
       'seat_cleaning': 'Seat Cleaning',
@@ -235,7 +245,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -244,34 +254,49 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icons[service],
-              size: 20,
-              color: isSelected
-                  ? const Color(0xFF0373F3)
-                  : const Color(0xFF9CA3AF),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                labels[service]!,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+            Row(
+              children: [
+                Icon(
+                  icons[service],
+                  size: 18,
                   color: isSelected
                       ? const Color(0xFF0373F3)
-                      : Colors.black,
+                      : const Color(0xFF9CA3AF),
                 ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    labels[service]!,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected
+                          ? const Color(0xFF0373F3)
+                          : Theme.of(context).textTheme.titleMedium?.color,
+                    ),
+                  ),
+                ),
+                if (isSelected)
+                  const Icon(
+                    Icons.check_circle,
+                    size: 16,
+                    color: Color(0xFF0373F3),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'KSh $price',
+              style: GoogleFonts.poppins(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
-            if (isSelected)
-              const Icon(
-                Icons.check_circle,
-                size: 18,
-                color: Color(0xFF0373F3),
-              ),
           ],
         ),
       ),
