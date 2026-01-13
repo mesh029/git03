@@ -117,12 +117,17 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       case 'milimani':
       case 'town_center':
       case 'nyalenda':
+        final areaName = action
+            .replaceAll('_', ' ')
+            .split(' ')
+            .map((w) => w[0].toUpperCase() + w.substring(1))
+            .join(' ');
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const MapScreen(
+            builder: (context) => MapScreen(
               mode: MapMode.properties,
-              data: {'area': action.replaceAll('_', ' ').split(' ').map((w) => w[0].toUpperCase() + w.substring(1)).join(' ')},
+              data: {'area': areaName},
             ),
           ),
         );
