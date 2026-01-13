@@ -376,7 +376,23 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
     final selectedCount = _selectedServices.values.where((v) => v).length;
     if (selectedCount == 0) return const SizedBox.shrink();
 
-    double basePrice = selectedCount * 500; // KSh 500 per service
+    // Calculate price based on selected services
+    final servicePrices = {
+      'vacuuming': 500,
+      'seat_cleaning': 400,
+      'general_cleaning': 600,
+      'deep_cleaning': 1200,
+      'window_cleaning': 300,
+      'bathroom_cleaning': 500,
+    };
+
+    double basePrice = 0;
+    _selectedServices.forEach((service, isSelected) {
+      if (isSelected) {
+        basePrice += servicePrices[service] ?? 0;
+      }
+    });
+
     if (_frequency == 'weekly') {
       basePrice *= 0.8; // 20% discount for weekly
     } else if (_frequency == 'monthly') {
