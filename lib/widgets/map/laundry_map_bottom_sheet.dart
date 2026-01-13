@@ -80,7 +80,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -129,7 +129,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -179,7 +179,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -198,7 +198,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-                      : Colors.white,
+                      : Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
@@ -225,7 +225,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                             ),
                           ),
                           Text(
@@ -262,7 +262,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -356,7 +356,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
@@ -401,7 +401,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   Text(
@@ -441,7 +441,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                    color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -471,7 +471,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                 ),
               ),
             ),
@@ -493,7 +493,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
@@ -507,7 +507,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                 ),
               ),
               Container(
@@ -573,7 +573,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -613,7 +613,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -631,7 +631,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
               ),
               textAlign: TextAlign.center,
             ),
@@ -736,7 +736,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
           ),
         ),
       ),

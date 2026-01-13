@@ -15,26 +15,27 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
             // Top section with gradient
             Container(
-              height: 200,
-              decoration: const BoxDecoration(
+              constraints: const BoxConstraints(minHeight: 200, maxHeight: 250),
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white,
-                    Color(0xFFFAFAFA),
+                    Theme.of(context).cardColor,
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 ),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 23.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
@@ -63,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                                 style: GoogleFonts.poppins(
                                   fontSize: 26,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black,
+                                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -81,7 +82,7 @@ class HomeScreen extends StatelessWidget {
                                     style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
-                                      color: const Color(0xFF818181),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color,
                                     ),
                                   ),
                                 ],
@@ -169,7 +170,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                         ),
                       ),
                     ),
@@ -297,7 +298,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                         ),
                       ),
                     ),
@@ -362,7 +363,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                         ),
                       ),
                     ),
@@ -449,7 +450,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                         ),
                       ),
                     ),
@@ -551,7 +552,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                         ),
                       ),
                     ),
@@ -625,11 +626,11 @@ class HomeScreen extends StatelessWidget {
       width: 230,
       height: 138,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -703,11 +704,11 @@ class HomeScreen extends StatelessWidget {
       width: 230,
       height: 138,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -789,7 +790,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -809,7 +810,7 @@ class HomeScreen extends StatelessWidget {
                   color: const Color(0xFFC4C4C4),
                   child: const Icon(
                     Icons.image,
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     size: 48,
                   ),
                 );
@@ -846,7 +847,7 @@ class HomeScreen extends StatelessWidget {
                         style: GoogleFonts.andika(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -909,11 +910,11 @@ class HomeScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -991,7 +992,7 @@ class HomeScreen extends StatelessWidget {
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black,
+                            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                           ),
                         ),
                       ],
@@ -1022,11 +1023,11 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -1099,7 +1100,7 @@ class HomeScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(

@@ -66,7 +66,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -115,7 +115,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -155,7 +155,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
@@ -312,7 +312,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
           ),
         ),
         const SizedBox(height: 12),
@@ -348,7 +348,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Colors.white,
+              : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -441,7 +441,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                 style: GoogleFonts.poppins(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                 ),
               ),
             ),
@@ -488,7 +488,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
           ),
         ),
       ),

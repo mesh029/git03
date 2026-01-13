@@ -21,6 +21,7 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Map background
@@ -56,7 +57,7 @@ class MapScreen extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       decoration: const BoxDecoration(
-        color: Color(0xFFE5E7EB),
+        color: Theme.of(context).scaffoldBackgroundColor,
       ),
       child: Image.network(
         'https://www.figma.com/api/mcp/asset/26b19d5c-d5e0-479a-899f-e50a8e0022d2',
@@ -71,7 +72,7 @@ class MapScreen extends StatelessWidget {
                   const Icon(
                     Icons.map,
                     size: 64,
-                    color: Color(0xFF9CA3AF),
+                    color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -148,10 +149,10 @@ class MapScreen extends StatelessWidget {
         pinColor = const Color(0xFF0373F3); // Blue for properties
         break;
       case MapMode.laundry:
-        pinColor = const Color(0xFF0373F3); // Purple for laundry
+        pinColor = const Color(0xFF8B5CF6); // Purple for laundry
         break;
       case MapMode.cleaning:
-        pinColor = const Color(0xFF0373F3); // Purple for cleaning (same brand)
+        pinColor = const Color(0xFF8B5CF6); // Purple for cleaning (same brand)
         break;
       case MapMode.rides:
         pinColor = const Color(0xFF10B981); // Green for rides
@@ -177,7 +178,7 @@ class MapScreen extends StatelessWidget {
         ),
         child: const Icon(
           Icons.location_on,
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           size: 18,
         ),
       ),
@@ -196,12 +197,12 @@ class MapScreen extends StatelessWidget {
               height: 48,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
               ),
               child: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
-                  color: Colors.black,
+                  color: Theme.of(context).iconTheme.color ?? Colors.black,
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
@@ -212,7 +213,7 @@ class MapScreen extends StatelessWidget {
               child: Container(
                 height: 46,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(23),
                   boxShadow: [
                     BoxShadow(
@@ -257,7 +258,7 @@ class MapScreen extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(
                   Icons.tune,
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                   size: 24,
                 ),
                 onPressed: () {},
@@ -287,9 +288,9 @@ class MapScreen extends StatelessWidget {
       case MapMode.properties:
         return const Color(0xFF0373F3);
       case MapMode.laundry:
-        return const Color(0xFF0373F3);
+        return const Color(0xFF8B5CF6);
       case MapMode.cleaning:
-        return const Color(0xFF0373F3);
+        return const Color(0xFF8B5CF6);
       case MapMode.rides:
         return const Color(0xFF10B981);
     }
@@ -307,8 +308,8 @@ class MapScreen extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Colors.white.withValues(alpha: 0.95),
-              Colors.white,
+              Theme.of(context).cardColor.withValues(alpha: 0.95),
+              Theme.of(context).cardColor,
             ],
           ),
         ),
@@ -326,7 +327,7 @@ class MapScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                    color: Theme.of(context).iconTheme.color ?? Colors.black,
                   ),
                 ),
               ),
