@@ -230,9 +230,9 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: const Color(0xFFC4C4C4),
-                            child: const Icon(
+                            child: Icon(
                               Icons.image,
-                              color: Theme.of(context).cardColor,
+                              color: Colors.white,
                               size: 32,
                             ),
                           );

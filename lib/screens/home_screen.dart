@@ -193,6 +193,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildServiceCard(
+                              context,
                               Icons.local_laundry_service,
                               'Fresh Keja',
                               const Color(0xFF0373F3),
@@ -214,6 +215,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildServiceCard(
+                              context,
                               Icons.home,
                               'Saka Keja',
                               const Color(0xFF0373F3),
@@ -236,6 +238,7 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             child: _buildServiceCard(
+                              context,
                               Icons.directions_car,
                               'RideX',
                               const Color(0xFF9CA3AF),
@@ -258,6 +261,7 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             child: _buildServiceCard(
+                              context,
                               Icons.moped,
                               'TukTuk Express',
                               const Color(0xFF9CA3AF),
@@ -280,6 +284,7 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             child: _buildServiceCard(
+                              context,
                               Icons.two_wheeler,
                               'CycleX',
                               const Color(0xFF9CA3AF),
@@ -323,6 +328,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildPopularServiceCard(
+                              context,
                               'Fresh Keja',
                               'laundry & house cleaning',
                               '4.8',
@@ -344,6 +350,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildPopularServiceCard(
+                              context,
                               'Saka Keja',
                               'BNBs & apartments',
                               '4.9',
@@ -387,6 +394,7 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               child: _buildServiceAreaCard(
+                                context,
                                 'Milimani',
                                 12,
                                 8,
@@ -409,6 +417,7 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               child: _buildServiceAreaCard(
+                                context,
                                 'Town Center',
                                 24,
                                 15,
@@ -431,6 +440,7 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                               child: _buildServiceAreaCard(
+                                context,
                                 'Nyalenda',
                                 18,
                                 12,
@@ -484,6 +494,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildFeaturedPropertyCard(
+                              context,
                               '3BR Apartment',
                               'Milimani',
                               'KSh 15,000/month',
@@ -507,6 +518,7 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                   child: _buildFeaturedServiceCard(
+                                    context,
                                     'Fresh Keja Pro',
                                     'Same-day service',
                                     '4.9',
@@ -530,6 +542,7 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                   child: _buildFeaturedServiceCard(
+                                    context,
                                     'Elite Cleaning',
                                     'House cleaning',
                                     '4.7',
@@ -574,6 +587,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildQuickActionCard(
+                              context,
                               Icons.local_laundry_service,
                               'Book Fresh Keja service',
                               const Color(0xFF0373F3),
@@ -592,6 +606,7 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
                             child: _buildQuickActionCard(
+                              context,
                               Icons.home,
                               'Find vacant houses & rentals',
                               const Color(0xFF0373F3),
@@ -621,7 +636,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Service cards - using exact Figma dimensions: 230x138
-  Widget _buildServiceCard(IconData icon, String label, Color color, {bool isActive = true}) {
+  Widget _buildServiceCard(BuildContext context, IconData icon, String label, Color color, {bool isActive = true}) {
     return Container(
       width: 230,
       height: 138,
@@ -694,6 +709,7 @@ class HomeScreen extends StatelessWidget {
 
   // Popular service cards - using exact Figma dimensions: 230x138, fixed overflow
   Widget _buildPopularServiceCard(
+    BuildContext context,
     String title,
     String subtitle,
     String rating,
@@ -778,6 +794,7 @@ class HomeScreen extends StatelessWidget {
 
   // Service Area cards with image backgrounds - using exact Figma dimensions: 142x200
   Widget _buildServiceAreaCard(
+    BuildContext context,
     String neighborhood,
     int propertyCount,
     int serviceProviderCount,
@@ -901,6 +918,7 @@ class HomeScreen extends StatelessWidget {
 
   // Featured Property card - large card for properties
   Widget _buildFeaturedPropertyCard(
+    BuildContext context,
     String title,
     String location,
     String price,
@@ -1014,6 +1032,7 @@ class HomeScreen extends StatelessWidget {
 
   // Featured Service card - smaller card for service providers
   Widget _buildFeaturedServiceCard(
+    BuildContext context,
     String providerName,
     String availability,
     String rating,
@@ -1095,7 +1114,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActionCard(IconData icon, String label, Color color) {
+  Widget _buildQuickActionCard(BuildContext context, IconData icon, String label, Color color) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),

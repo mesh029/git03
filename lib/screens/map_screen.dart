@@ -25,7 +25,7 @@ class MapScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Map background
-          _buildMapBackground(),
+          _buildMapBackground(context),
           // Location pins on map (dynamic based on mode)
           ..._buildLocationPins(),
           // Top navigation bar
@@ -52,7 +52,7 @@ class MapScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMapBackground() {
+  Widget _buildMapBackground(BuildContext context) {
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -176,9 +176,9 @@ class MapScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(
+        child: Icon(
           Icons.location_on,
-          color: Theme.of(context).cardColor,
+          color: Colors.white,
           size: 18,
         ),
       ),
@@ -195,12 +195,12 @@ class MapScreen extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Theme.of(context).cardColor,
               ),
               child: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.arrow_back,
                   color: Theme.of(context).iconTheme.color ?? Colors.black,
                 ),
@@ -256,9 +256,9 @@ class MapScreen extends StatelessWidget {
                 color: _getFilterButtonColor(),
               ),
               child: IconButton(
-                icon: const Icon(
+                icon: Icon(
                   Icons.tune,
-                  color: Theme.of(context).cardColor,
+                  color: Colors.white,
                   size: 24,
                 ),
                 onPressed: () {},

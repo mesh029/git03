@@ -255,9 +255,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                     color: const Color(0xFF0373F3),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.tune,
-                    color: Theme.of(context).cardColor,
+                    color: Colors.white,
                     size: 20,
                   ),
                 ),
