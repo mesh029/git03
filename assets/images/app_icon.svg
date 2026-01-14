@@ -1,0 +1,46 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="houseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F3F4F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGradient)"/>
+  
+  <!-- House base -->
+  <path d="M256 180L180 240V380H332V240L256 180Z" fill="url(#houseGradient)" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- House roof -->
+  <path d="M180 240L256 160L332 240" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Door -->
+  <rect x="236" y="300" width="40" height="80" rx="4" fill="#6366F1"/>
+  <circle cx="256" cy="340" r="3" fill="#FFFFFF"/>
+  
+  <!-- Window left -->
+  <rect x="200" y="260" width="30" height="30" rx="4" fill="#6366F1" opacity="0.8"/>
+  <line x1="215" y1="260" x2="215" y2="290" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="200" y1="275" x2="230" y2="275" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Window right -->
+  <rect x="282" y="260" width="30" height="30" rx="4" fill="#6366F1" opacity="0.8"/>
+  <line x1="297" y1="260" x2="297" y2="290" stroke="#FFFFFF" stroke-width="2"/>
+  <line x1="282" y1="275" x2="312" y2="275" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Service sparkle/star top right -->
+  <g transform="translate(340, 140)">
+    <path d="M0,-12 L3,-3 L12,-3 L4.5,1.5 L7.5,10.5 L0,4.5 L-7.5,10.5 L-4.5,1.5 L-12,-3 L-3,-3 Z" fill="#FCD34D" opacity="0.9"/>
+  </g>
+  
+  <!-- Service sparkle/star bottom left -->
+  <g transform="translate(140, 360)">
+    <path d="M0,-10 L2.5,-2.5 L10,-2.5 L4,1.5 L6.5,9 L0,4 L-6.5,9 L-4,1.5 L-10,-2.5 L-2.5,-2.5 Z" fill="#FCD34D" opacity="0.9"/>
+  </g>
+</svg>
