@@ -8,6 +8,7 @@ class User {
   final String phone;
   final Membership membership;
   final DateTime createdAt;
+  final bool isAdmin;
 
   User({
     required this.id,
@@ -16,6 +17,7 @@ class User {
     required this.phone,
     required this.membership,
     required this.createdAt,
+    this.isAdmin = false,
   });
 
   // Convert to JSON for database
@@ -27,6 +29,7 @@ class User {
       'phone': phone,
       'membership': membership.toJson(),
       'createdAt': createdAt.toIso8601String(),
+      'isAdmin': isAdmin,
     };
   }
 
@@ -39,6 +42,7 @@ class User {
       phone: json['phone'] as String,
       membership: Membership.fromJson(json['membership'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
+      isAdmin: json['isAdmin'] as bool? ?? false,
     );
   }
 }

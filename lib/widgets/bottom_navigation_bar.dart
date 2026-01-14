@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -13,35 +15,45 @@ class AppBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, _) {
+        final isAdmin = authProvider.isAdmin;
+        final navItems = isAdmin ? 5 : 4;
+        
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+            border: Border(
+              top: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: 1,
+              ),
+            ),
           ),
-        ),
-      ),
-      child: SafeArea(
-        child: Container(
-          height: 100,
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildNavItem(context, Icons.home, 'Home', 0),
-              _buildNavItem(context, Icons.build_circle, 'Services', 1),
-              _buildNavItem(context, Icons.receipt_long, 'Orders', 2),
-              _buildNavItem(context, Icons.person, 'Profile', 3),
-            ],
+          child: SafeArea(
+            child: Container(
+              height: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildNavItem(context, Icons.home, 'Home', 0),
+                  _buildNavItem(context, Icons.build_circle, 'Services', 1),
+                  _buildNavItem(context, Icons.receipt_long, 'Orders', 2),
+                  _buildNavItem(context, Icons.person, 'Profile', 3),
+                  if (isAdmin)
+                    _buildNavItem(context, Icons.admin_panel_settings, 'Admin', 4),
+                  _buildNavItem(context, Icons.chat_bubble_outline, 'Messages', 5),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

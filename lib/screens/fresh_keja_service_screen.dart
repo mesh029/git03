@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'map_screen.dart';
+import 'home_screen.dart';
+import 'orders_screen.dart';
+import 'profile_screen.dart';
+import 'admin_orders_screen.dart';
+import 'messages_screen.dart';
 import '../models/map_mode.dart';
+import '../widgets/bottom_navigation_bar.dart';
+import '../providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class FreshKejaServiceScreen extends StatelessWidget {
   const FreshKejaServiceScreen({super.key});
@@ -93,6 +101,46 @@ class FreshKejaServiceScreen extends StatelessWidget {
             _buildFeatureItem(context, Icons.check_circle, 'Trusted by thousands'),
           ],
         ),
+      ),
+      bottomNavigationBar: Consumer<AuthProvider>(
+        builder: (context, authProvider, _) {
+          return AppBottomNavigationBar(
+            currentIndex: 1,
+            onTap: (index) {
+              if (index == 0) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  (route) => false,
+                );
+              } else if (index == 1) {
+                // Already on services
+                return;
+              } else if (index == 2) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const OrdersScreen()),
+                  (route) => false,
+                );
+              } else if (index == 3) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  (route) => false,
+                );
+              } else if (index == 4 && authProvider.isAdmin) {
+                // Admin
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                  (route) => false,
+                );
+              } else if (index == 5) {
+                // Messages
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const MessagesScreen()),
+                  (route) => false,
+                );
+              }
+            },
+          );
+        },
       ),
     );
   }

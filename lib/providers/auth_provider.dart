@@ -83,6 +83,29 @@ class DummyUsers {
       ),
       createdAt: DateTime.now().subtract(const Duration(days: 10)),
     ),
+    // Admin user
+    User(
+      id: 'user_admin',
+      name: 'Admin',
+      email: 'admin@juax.com',
+      phone: '+254712345682',
+      membership: Membership(
+        type: MembershipType.premium,
+        subscriptions: [
+          Subscription(
+            id: 'sub_admin',
+            service: ServiceType.all,
+            duration: SubscriptionDuration.annual,
+            startDate: DateTime.now().subtract(const Duration(days: 365)),
+            endDate: DateTime.now().add(const Duration(days: 365)),
+            isActive: true,
+          ),
+        ],
+        expiresAt: DateTime.now().add(const Duration(days: 365)),
+      ),
+      createdAt: DateTime.now().subtract(const Duration(days: 365)),
+      isAdmin: true,
+    ),
   ];
 }
 
@@ -93,6 +116,7 @@ class AuthProvider extends ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
+  bool get isAdmin => _currentUser?.isAdmin ?? false;
 
   // Login with email and password
   Future<bool> login(String email, String password) async {

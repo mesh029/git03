@@ -5,6 +5,8 @@ import '../widgets/bottom_navigation_bar.dart';
 import 'home_screen.dart';
 import 'map_screen.dart';
 import 'orders_screen.dart';
+import 'admin_orders_screen.dart';
+import 'messages_screen.dart';
 import '../models/map_mode.dart';
 import 'package:provider/provider.dart';
 import 'login_screen.dart';
@@ -63,29 +65,45 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          bottomNavigationBar: AppBottomNavigationBar(
-            currentIndex: 3,
-            onTap: (index) {
-              if (index == 0) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (route) => false,
-                );
-              } else if (index == 1) {
-                // Services - redirect to home, services should be accessed from home
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  (route) => false,
-                );
-              } else if (index == 2) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const OrdersScreen()),
-                  (route) => false,
-                );
-              } else if (index == 3) {
-                // Already on profile
-                return;
-              }
+          bottomNavigationBar: Consumer<AuthProvider>(
+            builder: (context, authProvider, _) {
+              return AppBottomNavigationBar(
+                currentIndex: 3,
+                onTap: (index) {
+                  if (index == 0) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      (route) => false,
+                    );
+                  } else if (index == 1) {
+                    // Services - redirect to home, services should be accessed from home
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                      (route) => false,
+                    );
+                  } else if (index == 2) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const OrdersScreen()),
+                      (route) => false,
+                    );
+                  } else if (index == 3) {
+                    // Already on profile
+                    return;
+                  } else if (index == 4 && authProvider.isAdmin) {
+                    // Admin
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                      (route) => false,
+                    );
+                  } else if (index == 5) {
+                    // Messages
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const MessagesScreen()),
+                      (route) => false,
+                    );
+                  }
+                },
+              );
             },
           ),
         );

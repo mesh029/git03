@@ -517,18 +517,24 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                 // Count rooms (estimate based on service type)
                 final rooms = primaryService == 'deep_cleaning' ? 3 : 2;
                 
+                final user = authProvider.currentUser!;
                 final order = Order(
                   id: 'order_${DateTime.now().millisecondsSinceEpoch}',
-                  userId: authProvider.currentUser!.id,
+                  userId: user.id,
                   type: OrderType.cleaning,
                   status: OrderStatus.pending,
                   details: {
                     'service': serviceName,
                     'location': location,
+                    'pickupLocation': location,
+                    'dropoffLocation': location,
                     'rooms': rooms,
                     'frequency': _frequency == 'one_time' ? 'One-time' : 
                                  _frequency == 'weekly' ? 'Weekly' : 'Monthly',
                     'services': selectedServiceList,
+                    'customerName': user.name,
+                    'customerEmail': user.email,
+                    'customerPhone': user.phone,
                   },
                   createdAt: DateTime.now(),
                   scheduledAt: DateTime.now().add(const Duration(days: 1)),

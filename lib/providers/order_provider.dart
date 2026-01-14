@@ -1,11 +1,30 @@
 import 'package:flutter/foundation.dart';
 import '../models/order_model.dart';
+import '../models/user_model.dart';
+import 'auth_provider.dart';
 
 // Dummy orders database - replace with API later
 class DummyOrders {
   static List<Order> getOrdersForUser(String userId) {
     return allOrders.where((order) => order.userId == userId).toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  static List<Order> getAllOrders() {
+    return List.from(allOrders)..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  static User getUserForOrder(String userId) {
+    try {
+      return DummyUsers.users.firstWhere(
+        (user) => user.id == userId,
+      );
+    } catch (e) {
+      // Fallback to first user if not found
+      return DummyUsers.users.isNotEmpty 
+          ? DummyUsers.users.first 
+          : throw Exception('No users found');
+    }
   }
 
   static final List<Order> allOrders = [
@@ -18,8 +37,13 @@ class DummyOrders {
       details: {
         'service': 'Deep Cleaning',
         'location': 'Milimani, Kisumu',
+        'pickupLocation': 'Milimani, Kisumu',
+        'dropoffLocation': 'Milimani, Kisumu',
         'rooms': 3,
         'frequency': 'One-time',
+        'customerName': 'Meshack',
+        'customerEmail': 'meshack@example.com',
+        'customerPhone': '+254712345678',
       },
       createdAt: DateTime.now().subtract(const Duration(days: 2)),
       scheduledAt: DateTime.now().subtract(const Duration(days: 2)),
@@ -35,7 +59,13 @@ class DummyOrders {
         'quantity': 5,
         'method': 'Pickup',
         'location': 'Town Center, Kisumu',
+        'pickupLocation': 'Town Center, Kisumu',
+        'dropoffLocation': 'Town Center, Kisumu',
         'items': ['Shirts', 'Pants', 'Bedding'],
+        'serviceType': 'Wash & Fold',
+        'customerName': 'Meshack',
+        'customerEmail': 'meshack@example.com',
+        'customerPhone': '+254712345678',
       },
       createdAt: DateTime.now().subtract(const Duration(hours: 5)),
       scheduledAt: DateTime.now().subtract(const Duration(hours: 4)),
@@ -49,8 +79,13 @@ class DummyOrders {
       details: {
         'service': 'Regular Cleaning',
         'location': 'Milimani, Kisumu',
+        'pickupLocation': 'Milimani, Kisumu',
+        'dropoffLocation': 'Milimani, Kisumu',
         'rooms': 2,
         'frequency': 'Weekly',
+        'customerName': 'Meshack',
+        'customerEmail': 'meshack@example.com',
+        'customerPhone': '+254712345678',
       },
       createdAt: DateTime.now().subtract(const Duration(hours: 1)),
       scheduledAt: DateTime.now().add(const Duration(days: 1)),
@@ -66,7 +101,13 @@ class DummyOrders {
         'quantity': 3,
         'method': 'Drop-off',
         'location': 'Nyalenda, Kisumu',
+        'pickupLocation': 'Nyalenda, Kisumu',
+        'dropoffLocation': 'Nyalenda, Kisumu',
         'items': ['Shirts', 'Pants'],
+        'serviceType': 'Wash & Fold',
+        'customerName': 'Freemium User',
+        'customerEmail': 'freemium@example.com',
+        'customerPhone': '+254712345681',
       },
       createdAt: DateTime.now().subtract(const Duration(days: 5)),
       scheduledAt: DateTime.now().subtract(const Duration(days: 5)),
@@ -81,8 +122,13 @@ class DummyOrders {
       details: {
         'service': 'Basic Cleaning',
         'location': 'Nyalenda, Kisumu',
+        'pickupLocation': 'Nyalenda, Kisumu',
+        'dropoffLocation': 'Nyalenda, Kisumu',
         'rooms': 1,
         'frequency': 'One-time',
+        'customerName': 'Freemium User',
+        'customerEmail': 'freemium@example.com',
+        'customerPhone': '+254712345681',
       },
       createdAt: DateTime.now().subtract(const Duration(minutes: 30)),
       scheduledAt: DateTime.now().add(const Duration(days: 2)),
@@ -95,9 +141,24 @@ class OrderProvider extends ChangeNotifier {
   List<Order> _orders = [];
   bool _isLoading = false;
   String? _currentUserId;
+  bool _isAdminView = false;
 
   List<Order> get orders => _orders;
   bool get isLoading => _isLoading;
+
+  // Load all orders for admin
+  Future<void> loadAllOrders() async {
+    _isAdminView = true;
+    _isLoading = true;
+    notifyListeners();
+
+    // Simulate API call delay
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    _orders = DummyOrders.getAllOrders();
+    _isLoading = false;
+    notifyListeners();
+  }
 
   // Load orders for a user
   Future<void> loadOrders(String userId) async {

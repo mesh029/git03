@@ -706,17 +706,26 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 if (_bedding > 0) items.add('$_bedding Bedding');
                 if (_towels > 0) items.add('$_towels Towels');
                 
+                final user = authProvider.currentUser!;
+                final pickupLocation = _selectedLocation == 'current' ? 'Current Location' : (_selectedStation ?? 'Pickup Station');
+                final dropoffLocation = _selectedLocation == 'current' ? 'Current Location' : (_selectedStation ?? 'Drop-off Station');
+                
                 final order = Order(
                   id: 'order_${DateTime.now().millisecondsSinceEpoch}',
-                  userId: authProvider.currentUser!.id,
+                  userId: user.id,
                   type: OrderType.laundry,
                   status: OrderStatus.pending,
                   details: {
                     'quantity': quantity,
                     'method': _selectedLocation == 'current' ? 'Pickup' : 'Drop-off',
                     'location': location,
+                    'pickupLocation': pickupLocation,
+                    'dropoffLocation': dropoffLocation,
                     'items': items,
                     'serviceType': _serviceType == 'wash_fold' ? 'Wash & Fold' : 'Dry Clean',
+                    'customerName': user.name,
+                    'customerEmail': user.email,
+                    'customerPhone': user.phone,
                   },
                   createdAt: DateTime.now(),
                   scheduledAt: DateTime.now().add(const Duration(hours: 2)),

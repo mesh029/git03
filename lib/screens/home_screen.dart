@@ -6,6 +6,8 @@ import 'property_detail_screen.dart';
 import 'fresh_keja_service_screen.dart';
 import 'orders_screen.dart';
 import 'profile_screen.dart';
+import 'admin_orders_screen.dart';
+import 'messages_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/search_bar_widget.dart';
@@ -571,29 +573,45 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: AppBottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 0) {
-            // Already on home
-            return;
-          } else if (index == 1) {
-            // Services - disabled, should be accessed from home page actions
-            // Do nothing - services can only be accessed via home page quick actions
-            return;
-          } else if (index == 2) {
-            // Orders
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const OrdersScreen()),
-              (route) => route.settings.name == '/home' || route.isFirst,
-            );
-          } else if (index == 3) {
-            // Profile
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              (route) => route.settings.name == '/home' || route.isFirst,
-            );
-          }
+      bottomNavigationBar: Consumer<AuthProvider>(
+        builder: (context, authProvider, _) {
+          return AppBottomNavigationBar(
+            currentIndex: 0,
+            onTap: (index) {
+              if (index == 0) {
+                // Already on home
+                return;
+              } else if (index == 1) {
+                // Services - disabled, should be accessed from home page actions
+                // Do nothing - services can only be accessed via home page quick actions
+                return;
+              } else if (index == 2) {
+                // Orders
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const OrdersScreen()),
+                  (route) => route.settings.name == '/home' || route.isFirst,
+                );
+              } else if (index == 3) {
+                // Profile
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  (route) => route.settings.name == '/home' || route.isFirst,
+                );
+              } else if (index == 4 && authProvider.isAdmin) {
+                // Admin
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                  (route) => route.settings.name == '/home' || route.isFirst,
+                );
+              } else if (index == 5) {
+                // Messages
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const MessagesScreen()),
+                  (route) => route.settings.name == '/home' || route.isFirst,
+                );
+              }
+            },
+          );
         },
       ),
     );

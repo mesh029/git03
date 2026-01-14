@@ -343,6 +343,13 @@ class _LoginScreenState extends State<LoginScreen> {
         'type': 'Freemium',
         'color': Colors.grey,
       },
+      {
+        'name': 'Admin',
+        'email': 'admin@juax.com',
+        'password': 'password',
+        'type': 'Admin',
+        'color': Colors.purple,
+      },
     ];
 
     return Column(
