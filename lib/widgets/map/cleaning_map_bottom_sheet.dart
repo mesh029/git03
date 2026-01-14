@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/order_provider.dart';
+import '../../models/order_model.dart';
 
 class CleaningMapBottomSheet extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -63,11 +66,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
       children: [
         Text(
           'Service Location',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         Row(
@@ -114,13 +113,13 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -129,19 +128,18 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF0373F3)
+                  ? Theme.of(context).colorScheme.primary
                   : const Color(0xFF9CA3AF),
               size: 24,
             ),
             const SizedBox(height: 8),
             Text(
               label,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFF0373F3)
-                    : const Color(0xFF6B7280),
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
           ],
@@ -157,16 +155,16 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Enter address',
-          hintStyle: GoogleFonts.poppins(
-            color: const Color(0xFF9CA3AF),
+          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).textTheme.bodySmall?.color,
           ),
           border: InputBorder.none,
-          prefixIcon: const Icon(Icons.location_on, color: Color(0xFF0373F3)),
+          prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
         ),
       ),
     );
@@ -187,11 +185,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
       children: [
         Text(
           'Select Services',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         GridView.builder(
@@ -244,13 +238,13 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -264,37 +258,35 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
                   icons[service],
                   size: 18,
                   color: isSelected
-                      ? const Color(0xFF0373F3)
-                      : const Color(0xFF9CA3AF),
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                 ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     labels[service]!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: isSelected
-                          ? const Color(0xFF0373F3)
+                          ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).textTheme.titleMedium?.color,
                     ),
                   ),
                 ),
                 if (isSelected)
-                  const Icon(
+                  Icon(
                     Icons.check_circle,
                     size: 16,
-                    color: Color(0xFF0373F3),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
               ],
             ),
             const SizedBox(height: 4),
             Text(
               'KSh $price',
-              style: GoogleFonts.poppins(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
           ],
@@ -309,11 +301,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
       children: [
         Text(
           'Frequency',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         Row(
@@ -347,29 +335,64 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 14,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFF6B7280),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).textTheme.bodySmall?.color,
           ),
         ),
       ),
     );
+  }
+
+  double _calculatePrice() {
+    double basePrice = 0;
+    _selectedServices.forEach((service, isSelected) {
+      if (isSelected) {
+        switch (service) {
+          case 'vacuuming':
+            basePrice += 500;
+            break;
+          case 'seat_cleaning':
+            basePrice += 800;
+            break;
+          case 'general_cleaning':
+            basePrice += 1500;
+            break;
+          case 'deep_cleaning':
+            basePrice += 2500;
+            break;
+          case 'window_cleaning':
+            basePrice += 600;
+            break;
+          case 'bathroom_cleaning':
+            basePrice += 700;
+            break;
+        }
+      }
+    });
+
+    if (_frequency == 'weekly') {
+      basePrice *= 0.8; // 20% discount for weekly
+    } else if (_frequency == 'monthly') {
+      basePrice *= 0.7; // 30% discount for monthly
+    }
+
+    return basePrice;
   }
 
   Widget _buildPriceEstimate() {
@@ -402,7 +425,7 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0373F3).withValues(alpha: 0.1),
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -413,18 +436,13 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             children: [
               Text(
                 'Estimated Price',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: const Color(0xFF6B7280),
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 4),
               Text(
                 'KSh ${basePrice.toStringAsFixed(0)}',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0373F3),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -433,15 +451,15 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981),
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
                 _frequency == 'weekly' ? '20% off' : '30% off',
-                style: GoogleFonts.poppins(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Theme.of(context).cardColor,
                 ),
               ),
             ),
@@ -461,33 +479,84 @@ class _CleaningMapBottomSheetState extends State<CleaningMapBottomSheet> {
       height: 50,
       child: ElevatedButton(
         onPressed: isValid
-            ? () {
-                final services = _selectedServices.entries
+            ? () async {
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+                
+                if (authProvider.currentUser == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please log in to book services')),
+                  );
+                  return;
+                }
+
+                final selectedServiceList = _selectedServices.entries
                     .where((e) => e.value)
                     .map((e) => e.key)
-                    .join(', ');
+                    .toList();
                 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Booking cleaning: $selectedCount service(s) - $services, $_frequency at ${_selectedLocation == 'current' ? 'your location' : 'other address'}',
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
+                final primaryService = selectedServiceList.isNotEmpty
+                    ? selectedServiceList[0]
+                    : 'general_cleaning';
+                
+                // Map service keys to readable names
+                final serviceNameMap = {
+                  'vacuuming': 'Vacuuming',
+                  'seat_cleaning': 'Seat Cleaning',
+                  'general_cleaning': 'General Cleaning',
+                  'deep_cleaning': 'Deep Cleaning',
+                  'window_cleaning': 'Window Cleaning',
+                  'bathroom_cleaning': 'Bathroom Cleaning',
+                };
+                
+                final serviceName = serviceNameMap[primaryService] ?? 'General Cleaning';
+                final location = _selectedLocation == 'current' 
+                    ? 'Current Location' 
+                    : 'Other Address';
+                
+                // Count rooms (estimate based on service type)
+                final rooms = primaryService == 'deep_cleaning' ? 3 : 2;
+                
+                final order = Order(
+                  id: 'order_${DateTime.now().millisecondsSinceEpoch}',
+                  userId: authProvider.currentUser!.id,
+                  type: OrderType.cleaning,
+                  status: OrderStatus.pending,
+                  details: {
+                    'service': serviceName,
+                    'location': location,
+                    'rooms': rooms,
+                    'frequency': _frequency == 'one_time' ? 'One-time' : 
+                                 _frequency == 'weekly' ? 'Weekly' : 'Monthly',
+                    'services': selectedServiceList,
+                  },
+                  createdAt: DateTime.now(),
+                  scheduledAt: DateTime.now().add(const Duration(days: 1)),
+                  amount: _calculatePrice(),
                 );
+
+                await orderProvider.addOrder(order);
+                
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Cleaning service booked successfully!'),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  );
+                }
               }
             : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0373F3),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
         ),
         child: Text(
           'Book Cleaning Service',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Theme.of(context).cardColor,
           ),
         ),

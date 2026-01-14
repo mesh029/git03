@@ -20,13 +20,12 @@ class AppBottomNavigationBar extends StatelessWidget {
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
           ),
-        ],
+        ),
       ),
       child: SafeArea(
         child: Container(
@@ -35,11 +34,10 @@ class AppBottomNavigationBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildNavItem(Icons.home, 'Home', 0),
-              _buildNavItem(Icons.build_circle, 'Services', 1),
-              _buildNavItem(Icons.receipt_long, 'Orders', 2),
-              _buildNavItem(Icons.message, 'Messages', 3),
-              _buildNavItem(Icons.person, 'Profile', 4),
+              _buildNavItem(context, Icons.home, 'Home', 0),
+              _buildNavItem(context, Icons.build_circle, 'Services', 1),
+              _buildNavItem(context, Icons.receipt_long, 'Orders', 2),
+              _buildNavItem(context, Icons.person, 'Profile', 3),
             ],
           ),
         ),
@@ -47,7 +45,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, int index) {
+  Widget _buildNavItem(BuildContext context, IconData icon, String label, int index) {
     final isActive = currentIndex == index;
     return Expanded(
       child: GestureDetector(
@@ -58,16 +56,15 @@ class AppBottomNavigationBar extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isActive ? const Color(0xFF0373F3) : const Color(0xFFBCBCBC),
+              color: isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFFBCBCBC),
               size: 24,
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: isActive ? const Color(0xFF0373F3) : const Color(0xFFBCBCBC),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFFBCBCBC),
               ),
               textAlign: TextAlign.center,
             ),

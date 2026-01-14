@@ -13,64 +13,39 @@ class FreshKejaServiceScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Theme.of(context).cardColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+          onPressed: () => Navigator.of(context).pop(),
+          padding: EdgeInsets.zero,
         ),
         title: Text(
           'Fresh Keja',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
             Text(
               'Choose a Service',
-              style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
+              style: Theme.of(context).textTheme.displaySmall,
             ),
             const SizedBox(height: 8),
             Text(
               'Select the service you need',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Theme.of(context).textTheme.bodyMedium?.color,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 32),
-            // Laundry Service Card
-            _buildServiceCard(
+            // Laundry Service - icon + label row
+            _buildServiceRow(
               context,
               title: 'Laundry Service',
               description: 'Wash, dry, and fold your clothes',
               icon: Icons.local_laundry_service,
-              color: const Color(0xFF0373F3),
               onTap: () {
                 Navigator.push(
                   context,
@@ -83,14 +58,13 @@ class FreshKejaServiceScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 16),
-            // House Cleaning Service Card
-            _buildServiceCard(
+            const SizedBox(height: 12),
+            // House Cleaning Service - icon + label row
+            _buildServiceRow(
               context,
               title: 'House Cleaning',
               description: 'Vacuuming, seat cleaning, and more',
               icon: Icons.cleaning_services,
-              color: const Color(0xFF0373F3),
               onTap: () {
                 Navigator.push(
                   context,
@@ -107,16 +81,15 @@ class FreshKejaServiceScreen extends StatelessWidget {
             // Features section
             Text(
               'Why Choose Fresh Keja?',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 16),
             _buildFeatureItem(context, Icons.check_circle, 'Same-day service available'),
+            const SizedBox(height: 12),
             _buildFeatureItem(context, Icons.check_circle, 'Professional cleaning'),
+            const SizedBox(height: 12),
             _buildFeatureItem(context, Icons.check_circle, 'Affordable pricing'),
+            const SizedBox(height: 12),
             _buildFeatureItem(context, Icons.check_circle, 'Trusted by thousands'),
           ],
         ),
@@ -124,72 +97,68 @@ class FreshKejaServiceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceCard(
+  Widget _buildServiceRow(
     BuildContext context, {
     required String title,
     required String description,
     required IconData icon,
-    required Color color,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              width: 64,
-              height: 64,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(16),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: color,
-                size: 32,
+                color: Theme.of(context).colorScheme.primary,
+                size: 24,
               ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.titleLarge?.color,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     description,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
             ),
             Icon(
-              Icons.arrow_forward_ios,
-              color: Theme.of(context).iconTheme.color,
+              Icons.chevron_right,
               size: 20,
+              color: Theme.of(context).textTheme.bodySmall?.color,
             ),
           ],
         ),
@@ -198,25 +167,19 @@ class FreshKejaServiceScreen extends StatelessWidget {
   }
 
   Widget _buildFeatureItem(BuildContext context, IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: const Color(0xFF0373F3),
-            size: 20,
-          ),
-          const SizedBox(width: 12),
-          Text(
-            text,
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Theme.of(context).textTheme.bodyMedium?.color,
-            ),
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: Theme.of(context).colorScheme.primary,
+          size: 18,
+        ),
+        const SizedBox(width: 12),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }

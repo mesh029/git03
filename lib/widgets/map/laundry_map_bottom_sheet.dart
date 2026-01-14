@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/order_provider.dart';
+import '../../models/order_model.dart';
 
 enum QuantityInputMethod { items, weight }
 
@@ -77,11 +80,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       children: [
         Text(
           'Pickup Location',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         Row(
@@ -128,13 +127,13 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -143,19 +142,18 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF0373F3)
-                  : const Color(0xFF9CA3AF),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
               size: 24,
             ),
             const SizedBox(height: 8),
             Text(
               label,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? const Color(0xFF0373F3)
-                    : const Color(0xFF6B7280),
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
           ],
@@ -176,11 +174,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       children: [
         Text(
           'Select Pickup Station',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         ...stations.map((station) {
@@ -197,13 +191,13 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+                      ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
                       : Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? const Color(0xFF0373F3)
-                        : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -212,8 +206,8 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                     Icon(
                       Icons.store,
                       color: isSelected
-                          ? const Color(0xFF0373F3)
-                          : const Color(0xFF9CA3AF),
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -222,26 +216,21 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                         children: [
                           Text(
                             station['name']!,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                             ),
                           ),
                           Text(
                             station['distance']!,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: const Color(0xFF6B7280),
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
                     ),
                     if (isSelected)
-                      const Icon(
+                      Icon(
                         Icons.check_circle,
-                        color: Color(0xFF0373F3),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                   ],
                 ),
@@ -259,16 +248,12 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       children: [
         Text(
           'Quantity',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F8F8),
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -323,19 +308,18 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Icon(
               icon,
               color: isSelected
-                  ? const Color(0xFF0373F3)
-                  : const Color(0xFF9CA3AF),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
               size: 20,
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected
-                    ? const Color(0xFF0373F3)
-                    : const Color(0xFF6B7280),
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
           ],
@@ -358,7 +342,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: [
@@ -390,7 +374,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF0373F3).withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -398,18 +382,15 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 children: [
                   Text(
                     'Total items',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                     ),
                   ),
                   Text(
                     '$_totalItems items (~${_estimatedWeight.toStringAsFixed(1)} kg)',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF0373F3),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -433,16 +414,14 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         Expanded(
           child: Row(
             children: [
-              Icon(icon, size: 20, color: const Color(0xFF6B7280)),
+              Icon(icon, size: 20, color: Theme.of(context).textTheme.bodySmall?.color),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                  ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -458,7 +437,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
               onPressed: value > 0
                   ? () => onChanged(value - 1)
                   : null,
-              color: const Color(0xFF0373F3),
+              color: Theme.of(context).colorScheme.primary,
               iconSize: 24,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
@@ -468,17 +447,13 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
               alignment: Alignment.center,
               child: Text(
                 '$value',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
             IconButton(
               icon: const Icon(Icons.add_circle_outline),
               onPressed: () => onChanged(value + 1),
-              color: const Color(0xFF0373F3),
+              color: Theme.of(context).colorScheme.primary,
               iconSize: 24,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
@@ -495,7 +470,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         children: [
@@ -504,24 +479,18 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             children: [
               Text(
                 'Weight (kg)',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0373F3).withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${_weightKg.toStringAsFixed(1)} kg',
-                  style: GoogleFonts.poppins(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF0373F3),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -533,7 +502,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             min: 0.5,
             max: 50.0,
             divisions: 99,
-            activeColor: const Color(0xFF0373F3),
+            activeColor: Theme.of(context).colorScheme.primary,
             onChanged: (value) {
               setState(() {
                 _weightKg = value;
@@ -545,17 +514,11 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             children: [
               Text(
                 '0.5 kg',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: const Color(0xFF6B7280),
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               Text(
                 '50 kg',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: const Color(0xFF6B7280),
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
@@ -570,11 +533,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       children: [
         Text(
           'Service Type',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 12),
         Row(
@@ -612,26 +571,24 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
               : Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Column(
           children: [
-            Icon(icon, color: const Color(0xFF0373F3), size: 24),
+            Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
             const SizedBox(height: 8),
             Text(
               label,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w500,
-                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
               ),
               textAlign: TextAlign.center,
             ),
@@ -639,6 +596,23 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
         ),
       ),
     );
+  }
+
+  double _calculatePrice() {
+    double basePrice = 0;
+    if (_inputMethod == QuantityInputMethod.items) {
+      // Item-based is more expensive due to mixed weights (heavy + light clothes)
+      basePrice = _totalItems * 80; // KSh 80 per item (more expensive)
+    } else {
+      // Weight-based is cheaper - straightforward pricing
+      basePrice = _weightKg * 150; // KSh 150 per kg (cheaper)
+    }
+    
+    if (_serviceType == 'dry_clean') {
+      basePrice *= 1.5; // Dry clean is 50% more
+    }
+
+    return basePrice;
   }
 
   Widget _buildPriceEstimate() {
@@ -660,7 +634,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0373F3).withValues(alpha: 0.1),
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -671,27 +645,21 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             children: [
               Text(
                 'Estimated Price',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: const Color(0xFF6B7280),
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const SizedBox(height: 4),
               Text(
                 'KSh ${basePrice.toStringAsFixed(0)}',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF0373F3),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
           ),
           Text(
             '*Final price may vary',
-            style: GoogleFonts.poppins(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontSize: 10,
-              color: const Color(0xFF6B7280),
             ),
           ),
         ],
@@ -710,32 +678,73 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
       height: 50,
       child: ElevatedButton(
         onPressed: isValid
-            ? () {
-                final quantity = _inputMethod == QuantityInputMethod.items
-                    ? '$_totalItems items'
-                    : '${_weightKg.toStringAsFixed(1)} kg';
+            ? () async {
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                final orderProvider = Provider.of<OrderProvider>(context, listen: false);
                 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Booking laundry: $quantity, ${_serviceType == 'wash_fold' ? 'Wash & Fold' : 'Dry Clean'} at ${_selectedLocation == 'current' ? 'current location' : _selectedStation}',
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
+                if (authProvider.currentUser == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please log in to book services')),
+                  );
+                  return;
+                }
+
+                final quantity = _inputMethod == QuantityInputMethod.items
+                    ? _totalItems
+                    : _weightKg.toInt();
+                
+                final location = _selectedLocation == 'current' 
+                    ? 'Current Location' 
+                    : (_selectedStation ?? 'Pickup Station');
+                
+                // Build items list
+                final items = <String>[];
+                if (_shirts > 0) items.add('$_shirts Shirts');
+                if (_pants > 0) items.add('$_pants Pants');
+                if (_dresses > 0) items.add('$_dresses Dresses');
+                if (_shoes > 0) items.add('$_shoes Shoes');
+                if (_bedding > 0) items.add('$_bedding Bedding');
+                if (_towels > 0) items.add('$_towels Towels');
+                
+                final order = Order(
+                  id: 'order_${DateTime.now().millisecondsSinceEpoch}',
+                  userId: authProvider.currentUser!.id,
+                  type: OrderType.laundry,
+                  status: OrderStatus.pending,
+                  details: {
+                    'quantity': quantity,
+                    'method': _selectedLocation == 'current' ? 'Pickup' : 'Drop-off',
+                    'location': location,
+                    'items': items,
+                    'serviceType': _serviceType == 'wash_fold' ? 'Wash & Fold' : 'Dry Clean',
+                  },
+                  createdAt: DateTime.now(),
+                  scheduledAt: DateTime.now().add(const Duration(hours: 2)),
+                  amount: _calculatePrice(),
                 );
+
+                await orderProvider.addOrder(order);
+                
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Laundry service booked successfully!'),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  );
+                }
               }
             : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0373F3),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
         ),
         child: Text(
           'Book Laundry Service',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Theme.of(context).cardColor,
           ),
         ),

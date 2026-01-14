@@ -169,44 +169,50 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         Container(
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
             controller: _searchController,
             focusNode: _focusNode,
             decoration: InputDecoration(
               hintText: 'Search properties, services, areas...',
-              hintStyle: GoogleFonts.poppins(
-                color: const Color(0xFF9CA3AF),
-                fontSize: 16,
+              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.search,
-                color: Color(0xFF0373F3),
-                size: 24,
+                color: Theme.of(context).colorScheme.primary,
+                size: 20,
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                  width: 1,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).dividerColor,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 1.5,
+                ),
               ),
               filled: true,
               fillColor: Theme.of(context).cardColor,
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 16,
+                horizontal: 16,
+                vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: Theme.of(context).textTheme.titleLarge?.color,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
         // Suggestions dropdown
@@ -217,19 +223,22 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             },
             child: Container(
               margin: const EdgeInsets.only(top: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withOpacity(0.3)
+                      : Colors.black.withOpacity(0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
                 child: _buildSuggestionsList(),
               ),
             ),
@@ -284,18 +293,18 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               leading: Icon(
                 _getIconForType(suggestion['type']),
-                color: const Color(0xFF0373F3),
+                color: Theme.of(context).colorScheme.primary,
               ),
               title: Text(
                 suggestion['title'],
-                style: GoogleFonts.poppins(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.titleMedium?.color,
                 ),
               ),
               subtitle: Text(
                 suggestion['subtitle'],
-                style: GoogleFonts.poppins(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontSize: 12,
                   color: Theme.of(context).textTheme.bodySmall?.color,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/map_mode.dart';
+import 'home_screen.dart'; // For AppColors
 
 class PropertyDetailScreen extends StatefulWidget {
   final String propertyId;
@@ -42,7 +43,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // App Bar with image carousel
@@ -52,46 +53,28 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
             pinned: true,
             elevation: 0,
             backgroundColor: Colors.transparent,
-            leading: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.9),
-              ),
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+              onPressed: () => Navigator.of(context).pop(),
+              padding: EdgeInsets.zero,
             ),
             actions: [
-              Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.9),
+              IconButton(
+                icon: Icon(
+                  _isFavorited ? Icons.favorite : Icons.favorite_border,
+                  color: _isFavorited ? const Color(0xFFEC4899) : Theme.of(context).iconTheme.color,
                 ),
-                child: IconButton(
-                  icon: Icon(
-                    _isFavorited ? Icons.favorite : Icons.favorite_border,
-                    color: _isFavorited ? const Color(0xFFEC4899) : Theme.of(context).iconTheme.color,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isFavorited = !_isFavorited;
-                    });
-                  },
-                ),
+                onPressed: () {
+                  setState(() {
+                    _isFavorited = !_isFavorited;
+                  });
+                },
+                padding: EdgeInsets.zero,
               ),
-              Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.9),
-                ),
-                child: IconButton(
-                  icon: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
-                  onPressed: () {},
-                ),
+              IconButton(
+                icon: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
+                onPressed: () {},
+                padding: EdgeInsets.zero,
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -101,72 +84,48 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
           // Content
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Property type badge
+                  // Property type badge - minimal
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: widget.type == PropertyType.bnb
-                          ? const Color(0xFFF59E0B).withValues(alpha: 0.1)
-                          : const Color(0xFF0373F3).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
+                          ? AppColors.accent.withOpacity(0.1)
+                          : Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          widget.type == PropertyType.bnb
-                              ? Icons.hotel
-                              : Icons.apartment,
-                          size: 16,
-                          color: widget.type == PropertyType.bnb
-                              ? const Color(0xFFF59E0B)
-                              : const Color(0xFF0373F3),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          widget.type.label,
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: widget.type == PropertyType.bnb
-                                ? const Color(0xFFF59E0B)
-                                : const Color(0xFF0373F3),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      widget.type.label,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: widget.type == PropertyType.bnb
+                            ? AppColors.accent
+                            : Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   // Title
                   Text(
                     widget.title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                    ),
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                   const SizedBox(height: 8),
                   // Location
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.location_on,
-                        size: 18,
-                        color: Color(0xFF6B7280),
+                        size: 16,
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         widget.location,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFF6B7280),
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],
                   ),
@@ -176,61 +135,45 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.star,
-                            color: Color(0xFFF59E0B),
-                            size: 20,
+                            color: AppColors.accent,
+                            size: 18,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             widget.rating,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             '(24 reviews)',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: const Color(0xFF6B7280),
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
                       const Spacer(),
                       Text(
                         widget.price,
-                        style: GoogleFonts.poppins(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF0373F3),
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 32),
                   // Divider
-                  const Divider(height: 1),
+                  Divider(color: Theme.of(context).dividerColor),
                   const SizedBox(height: 24),
                   // About section
                   Text(
                     'About this place',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 12),
                   Text(
                     'Beautiful ${widget.type == PropertyType.bnb ? "bed and breakfast" : "apartment"} located in the heart of ${widget.location}. Perfect for ${widget.type == PropertyType.bnb ? "short-term stays" : "long-term rentals"}. Modern amenities and excellent location.',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF6B7280),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       height: 1.5,
                     ),
                   ),
@@ -238,11 +181,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   // Amenities
                   Text(
                     'Amenities',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 16),
                   _buildAmenitiesGrid(),
@@ -250,11 +189,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                   // Location map preview
                   Text(
                     'Location',
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 16),
                   _buildLocationPreview(),
@@ -287,11 +222,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  color: const Color(0xFFE5E7EB),
-                  child: const Icon(
+                  color: Theme.of(context).dividerColor,
+                  child: Icon(
                     Icons.image,
                     size: 64,
-                    color: Color(0xFF9CA3AF),
+                    color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                   ),
                 );
               },
@@ -311,7 +246,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withValues(alpha: 0.3),
+                  Theme.of(context).textTheme.titleLarge?.color?.withOpacity(0.3) ?? Colors.black.withOpacity(0.3),
                 ],
               ),
             ),
@@ -333,8 +268,8 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _currentImageIndex == index
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.5),
+                      ? Theme.of(context).cardColor
+                      : Theme.of(context).cardColor.withOpacity(0.5),
                 ),
               ),
             ),
@@ -367,24 +302,32 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F8F8),
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+                spreadRadius: 0,
+              ),
+            ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 amenities[index]['icon'] as IconData,
-                size: 28,
-                color: const Color(0xFF0373F3),
+                size: 24,
+                color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(height: 8),
               Text(
                 amenities[index]['label'] as String,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
                 ),
               ),
             ],
@@ -398,35 +341,35 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-        color: const Color(0xFFE5E7EB),
-        borderRadius: BorderRadius.circular(15),
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Stack(
         children: [
           // Map placeholder
           ClipRRect(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(12),
             child: Image.network(
               'https://www.figma.com/api/mcp/asset/26b19d5c-d5e0-479a-899f-e50a8e0022d2',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  color: const Color(0xFFE5E7EB),
-                  child: const Icon(
+                  color: Theme.of(context).dividerColor,
+                  child: Icon(
                     Icons.map,
                     size: 48,
-                    color: Color(0xFF9CA3AF),
+                    color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
                   ),
                 );
               },
             ),
           ),
           // Location pin
-          const Center(
+          Center(
             child: Icon(
               Icons.location_on,
               size: 48,
-              color: Color(0xFF0373F3),
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ],
@@ -436,16 +379,15 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
 
   Widget _buildBottomBar() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+        color: Theme.of(context).cardColor,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerColor,
+            width: 1,
           ),
-        ],
+        ),
       ),
       child: SafeArea(
         child: Row(
@@ -455,18 +397,19 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
               child: OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: const BorderSide(color: Color(0xFF0373F3)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 1.5,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
                   'Contact',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF0373F3),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -478,18 +421,17 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0373F3),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  elevation: 0,
                 ),
                 child: Text(
                   widget.type == PropertyType.bnb ? 'Book Now' : 'Apply Now',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).cardColor,
                   ),
                 ),
               ),

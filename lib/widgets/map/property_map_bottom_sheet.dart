@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../models/map_mode.dart';
 import '../../screens/property_detail_screen.dart';
+import '../../screens/home_screen.dart'; // For AppColors
 
 class PropertyMapBottomSheet extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -73,15 +73,15 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF0373F3).withValues(alpha: 0.1)
-              : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected
-                ? const Color(0xFF0373F3)
-                : const Color(0xFFE5E7EB),
-            width: isSelected ? 2 : 1,
-          ),
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+              : Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).dividerColor,
+          width: 1,
+        ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -94,18 +94,17 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                       : Icons.home,
               size: 16,
               color: isSelected
-                  ? const Color(0xFF0373F3)
-                  : const Color(0xFF9CA3AF),
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).textTheme.bodySmall?.color,
             ),
             const SizedBox(width: 6),
             Text(
               type.label,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isSelected
-                    ? const Color(0xFF0373F3)
-                    : const Color(0xFF6B7280),
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).textTheme.bodySmall?.color,
+                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
               ),
             ),
           ],
@@ -198,12 +197,15 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
       height: 166,
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.black.withOpacity(0.3)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -249,13 +251,13 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                           ),
                           decoration: BoxDecoration(
                             color: type == PropertyType.bnb
-                                ? const Color(0xFFF59E0B)
-                                : const Color(0xFF0373F3),
+                                ? AppColors.accent
+                                : Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             type.label,
-                            style: GoogleFonts.poppins(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).cardColor,
@@ -277,11 +279,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                     // Title
                     Text(
                       title,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -289,10 +287,8 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                     // Type description
                     Text(
                       type.description,
-                      style: GoogleFonts.poppins(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFF6B7280),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -306,7 +302,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                           child: const Icon(
                             Icons.star,
                             size: 14,
-                            color: Color(0xFFF59E0B),
+                            color: AppColors.accent,
                           ),
                         );
                       }),
@@ -315,21 +311,13 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                     // Price label
                     Text(
                       priceLabel,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFFAEAEAE),
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 2),
                     // Price
                     Text(
                       price,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
