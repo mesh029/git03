@@ -40,7 +40,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxHeight: 500),
+      constraints: const BoxConstraints(maxHeight: 400), // Reduced height to show more map
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 25.0),
         child: Column(

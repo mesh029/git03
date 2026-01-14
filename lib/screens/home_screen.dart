@@ -13,6 +13,9 @@ import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/search_bar_widget.dart';
 import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/map_provider.dart';
+import '../services/map/location_name_service.dart';
+import 'package:geolocator/geolocator.dart';
 
 // Spotify-inspired color constants
 class AppColors {
@@ -116,6 +119,16 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  /// Check if user is in Kisumu area (approximately)
+  bool _isInKisumuArea(double? latitude, double? longitude) {
+    return LocationNameService.isInKisumuArea(latitude, longitude);
+  }
+
+  /// Get location name from coordinates using LocationNameService
+  String _getLocationName(double? latitude, double? longitude) {
+    return LocationNameService.getLocationName(latitude, longitude);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,11 +149,22 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Consumer<AuthProvider>(
-                          builder: (context, authProvider, _) {
+                        child: Consumer2<AuthProvider, MapProvider>(
+                          builder: (context, authProvider, mapProvider, _) {
                             final user = authProvider.currentUser;
                             final userName = user?.name ?? 'Guest';
                             final greeting = _getGreeting();
+                            
+                            // Get user's actual location
+                            final userLocation = mapProvider.userLocation;
+                            final locationName = _getLocationName(
+                              userLocation?.latitude,
+                              userLocation?.longitude,
+                            );
+                            final isInKisumu = _isInKisumuArea(
+                              userLocation?.latitude,
+                              userLocation?.longitude,
+                            );
                             
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,12 +187,56 @@ class HomeScreen extends StatelessWidget {
                                       color: Theme.of(context).textTheme.bodyMedium?.color,
                                     ),
                                     const SizedBox(width: 4),
-                                    Text(
-                                      'Kisumu – Milimani',
-                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    Expanded(
+                                      child: Text(
+                                        mapProvider.isLoadingLocation 
+                                            ? 'Getting location...'
+                                            : locationName,
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
                                     ),
                                   ],
                                 ),
+                                // Show message if outside Kisumu
+                                if (!mapProvider.isLoadingLocation && 
+                                    userLocation != null && 
+                                    !isInKisumu)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.info_outline,
+                                            size: 16,
+                                            color: Theme.of(context).colorScheme.primary,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              'Services in your area coming soon. You can still browse!',
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.primary,
+                                                fontSize: 11,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                               ],
                             );
                           },
@@ -289,10 +357,7 @@ class HomeScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.laundry,
-                                    data: {'service': 'Fresh Keja'},
-                                  ),
+                                  builder: (context) => const FreshKejaServiceScreen(),
                                 ),
                               );
                             },
