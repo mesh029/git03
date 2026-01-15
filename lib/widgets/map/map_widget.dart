@@ -4,7 +4,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import '../../config/map_config.dart';
 import '../../models/map_location.dart';
+import '../../models/map_mode.dart';
 import '../../providers/map_provider.dart';
+import '../../providers/listings_provider.dart';
 import '../../services/map/location_service.dart';
 
 /// Provider-agnostic map widget
@@ -56,8 +58,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MapProvider>(
-      builder: (context, mapProvider, _) {
+    return Consumer2<MapProvider, ListingsProvider>(
+      builder: (context, mapProvider, listingsProvider, _) {
         // Always show the map - use user location if available, otherwise use default
         // This ensures map is always visible and dynamic
         final centerLocation = mapProvider.userLocation ?? 
@@ -106,7 +108,7 @@ class _MapWidgetState extends State<MapWidget> {
                 ),
                 // Markers layer - always show markers
                 MarkerLayer(
-                  markers: _buildMarkers(context, mapProvider),
+                  markers: _buildMarkers(context, mapProvider, listingsProvider),
                 ),
               ],
             ),
@@ -184,11 +186,29 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 
-  List<Marker> _buildMarkers(BuildContext context, MapProvider mapProvider) {
+  List<Marker> _buildMarkers(
+    BuildContext context,
+    MapProvider mapProvider,
+    ListingsProvider listingsProvider,
+  ) {
     final markers = <Marker>[];
 
-    // Placeholder location markers - show these first so they're always visible
-    if (widget.showPlaceholderMarkers && mapProvider.placeholderLocations.isNotEmpty) {
+    // Agent-managed listings (available only) - show as primary markers in property mode
+    if (widget.showPlaceholderMarkers) {
+      for (final listing in listingsProvider.availableListings) {
+        final mapLoc = MapLocation(
+          id: listing.id,
+          name: listing.title,
+          latitude: listing.location.latitude,
+          longitude: listing.location.longitude,
+          type: listing.type == PropertyType.bnb ? MapLocationType.bnb : MapLocationType.apartment,
+        );
+        markers.add(_buildPlaceholderMarker(context, mapLoc));
+      }
+    }
+
+    // Service location markers (laundry/cleaning stations)
+    if (mapProvider.placeholderLocations.isNotEmpty) {
       for (final location in mapProvider.placeholderLocations) {
         markers.add(_buildPlaceholderMarker(context, location));
       }

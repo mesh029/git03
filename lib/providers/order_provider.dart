@@ -57,10 +57,15 @@ class DummyOrders {
       status: OrderStatus.inProgress,
       details: {
         'quantity': 5,
+        'itemCount': 5,
+        'weightKg': 4.5,
+        'turnaroundDays': 2,
+        'readyBy': DateTime.now().add(const Duration(days: 2)).toIso8601String(),
         'method': 'Pickup',
         'location': 'Town Center, Kisumu',
         'pickupLocation': 'Town Center, Kisumu',
         'dropoffLocation': 'Town Center, Kisumu',
+        'pickupStation': 'Town Center Station',
         'items': ['Shirts', 'Pants', 'Bedding'],
         'serviceType': 'Wash & Fold',
         'customerName': 'Meshack',
@@ -99,10 +104,15 @@ class DummyOrders {
       status: OrderStatus.completed,
       details: {
         'quantity': 3,
+        'itemCount': 3,
+        'weightKg': 2.1,
+        'turnaroundDays': 1,
+        'readyBy': DateTime.now().subtract(const Duration(days: 4)).toIso8601String(),
         'method': 'Drop-off',
         'location': 'Nyalenda, Kisumu',
         'pickupLocation': 'Nyalenda, Kisumu',
         'dropoffLocation': 'Nyalenda, Kisumu',
+        'pickupStation': 'Nyalenda Station',
         'items': ['Shirts', 'Pants'],
         'serviceType': 'Wash & Fold',
         'customerName': 'Freemium User',
@@ -185,8 +195,10 @@ class OrderProvider extends ChangeNotifier {
     // Add to dummy database
     DummyOrders.allOrders.add(order);
     
-    // Reload orders if for current user
-    if (_currentUserId == order.userId) {
+    // Reload orders for whichever view is active
+    if (_isAdminView) {
+      _orders = DummyOrders.getAllOrders();
+    } else if (_currentUserId == order.userId) {
       _orders = DummyOrders.getOrdersForUser(order.userId);
     }
 

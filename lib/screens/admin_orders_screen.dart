@@ -537,16 +537,59 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
         ));
       }
     } else if (order.type == OrderType.laundry) {
-      final quantity = order.details['quantity'];
-      if (quantity != null) {
+      final pickupStation = order.details['pickupStation'];
+      if (pickupStation != null && pickupStation.toString().trim().isNotEmpty) {
         details.add(_buildInfoRow(
           context,
-          Icons.inventory,
-          'Quantity',
-          '$quantity items',
+          Icons.store,
+          'Pickup Station',
+          pickupStation.toString(),
         ));
         details.add(const SizedBox(height: 8));
       }
+
+      final itemCount = order.details['itemCount'];
+      final weightKg = order.details['weightKg'];
+      if (itemCount != null || weightKg != null) {
+        final parts = <String>[];
+        if (itemCount != null) parts.add('$itemCount items');
+        if (weightKg != null) parts.add('~${weightKg.toString()} kg');
+        details.add(_buildInfoRow(
+          context,
+          Icons.inventory,
+          'Load',
+          parts.join(' • '),
+        ));
+        details.add(const SizedBox(height: 8));
+      }
+
+      final turnaroundDays = order.details['turnaroundDays'];
+      final readyBy = order.details['readyBy'];
+      if (turnaroundDays != null) {
+        details.add(_buildInfoRow(
+          context,
+          Icons.schedule,
+          'Turnaround',
+          '$turnaroundDays day${turnaroundDays == 1 ? '' : 's'}',
+        ));
+        details.add(const SizedBox(height: 8));
+      }
+      if (readyBy != null) {
+        DateTime? readyDt;
+        try {
+          readyDt = DateTime.parse(readyBy.toString());
+        } catch (_) {
+          readyDt = null;
+        }
+        details.add(_buildInfoRow(
+          context,
+          Icons.event_available,
+          'Ready By',
+          readyDt != null ? _formatTimestamp(readyDt) : readyBy.toString(),
+        ));
+        details.add(const SizedBox(height: 8));
+      }
+
       final method = order.details['method'];
       if (method != null) {
         details.add(_buildInfoRow(

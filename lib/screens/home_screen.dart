@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'map_screen.dart';
 import 'property_detail_screen.dart';
@@ -7,6 +6,7 @@ import 'fresh_keja_service_screen.dart';
 import 'orders_screen.dart';
 import 'profile_screen.dart';
 import 'admin_orders_screen.dart';
+import 'agent_dashboard_screen.dart';
 import 'messages_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
@@ -14,8 +14,8 @@ import '../widgets/search_bar_widget.dart';
 import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/map_provider.dart';
+import '../providers/listings_provider.dart';
 import '../services/map/location_name_service.dart';
-import 'package:geolocator/geolocator.dart';
 
 // Spotify-inspired color constants
 class AppColors {
@@ -493,87 +493,93 @@ class HomeScreen extends StatelessWidget {
                     // Featured listings - properties only (database-ready)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          // First featured property (large card)
-                          Builder(
-                            builder: (context) {
-                              final listings = getFeaturedListings();
-                              if (listings.isEmpty) return const SizedBox.shrink();
-                              
-                              final firstListing = listings[0];
-                              return GestureDetector(
+                      child: Consumer<ListingsProvider>(
+                        builder: (context, listingsProvider, _) {
+                          final listings = listingsProvider.availableListings;
+                          if (listings.isEmpty) return const SizedBox.shrink();
+
+                          final first = listings.first;
+                          return Column(
+                            children: [
+                              GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => PropertyDetailScreen(
-                                        propertyId: firstListing['id'] as String,
-                                        title: firstListing['title'] as String,
-                                        location: firstListing['location'] as String,
-                                        price: firstListing['price'] as String,
-                                        rating: firstListing['rating'] as String,
-                                        type: firstListing['type'] as PropertyType,
-                                        images: (firstListing['images'] as List).cast<String>(),
+                                        propertyId: first.id,
+                                        title: first.title,
+                                        location: first.areaLabel,
+                                        price: first.priceLabel,
+                                        rating: first.rating.toStringAsFixed(1),
+                                        type: first.type,
+                                        images: first.images,
+                                        details: {
+                                          'amenities': first.amenities,
+                                          'houseRules': first.houseRules,
+                                          'traction': first.traction,
+                                          'isAvailable': first.isAvailable,
+                                        },
                                       ),
                                     ),
                                   );
                                 },
                                 child: _buildFeaturedPropertyCard(
                                   context,
-                                  firstListing['title'] as String,
-                                  (firstListing['location'] as String).split(',')[0],
-                                  firstListing['price'] as String,
-                                  firstListing['rating'] as String,
+                                  first.title,
+                                  first.areaLabel.split(',').first,
+                                  first.priceLabel,
+                                  first.rating.toStringAsFixed(1),
                                 ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          // Additional featured properties (horizontal scroll)
-                          SizedBox(
-                            height: 138,
-                            child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: getFeaturedListings().length > 1 
-                                  ? getFeaturedListings().length - 1 
-                                  : 0,
-                              separatorBuilder: (context, index) => const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                final listing = getFeaturedListings()[index + 1];
-                                return SizedBox(
-                                  width: 230,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PropertyDetailScreen(
-                                            propertyId: listing['id'] as String,
-                                            title: listing['title'] as String,
-                                            location: listing['location'] as String,
-                                            price: listing['price'] as String,
-                                            rating: listing['rating'] as String,
-                                            type: listing['type'] as PropertyType,
-                                            images: (listing['images'] as List).cast<String>(),
-                                          ),
+                              ),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                height: 138,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: listings.length > 1 ? listings.length - 1 : 0,
+                                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                                  itemBuilder: (context, index) {
+                                    final l = listings[index + 1];
+                                    return SizedBox(
+                                      width: 230,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PropertyDetailScreen(
+                                                propertyId: l.id,
+                                                title: l.title,
+                                                location: l.areaLabel,
+                                                price: l.priceLabel,
+                                                rating: l.rating.toStringAsFixed(1),
+                                                type: l.type,
+                                                images: l.images,
+                                                details: {
+                                                  'amenities': l.amenities,
+                                                  'houseRules': l.houseRules,
+                                                  'traction': l.traction,
+                                                  'isAvailable': l.isAvailable,
+                                                },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: _buildServiceCard(
+                                          context,
+                                          l.type == PropertyType.bnb ? Icons.hotel : Icons.apartment,
+                                          l.title,
+                                          Theme.of(context).colorScheme.primary,
                                         ),
-                                      );
-                                    },
-                                    child: _buildServiceCard(
-                                      context,
-                                      listing['type'] == PropertyType.bnb 
-                                          ? Icons.hotel 
-                                          : Icons.apartment,
-                                      listing['title'] as String,
-                                      Theme.of(context).colorScheme.primary,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -662,12 +668,18 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const ProfileScreen()),
                   (route) => route.settings.name == '/home' || route.isFirst,
                 );
-              } else if (index == 4 && authProvider.isAdmin) {
-                // Admin
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
-                  (route) => route.settings.name == '/home' || route.isFirst,
-                );
+              } else if (index == 4) {
+                if (authProvider.isAdmin) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                    (route) => route.settings.name == '/home' || route.isFirst,
+                  );
+                } else if (authProvider.isAgent) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const AgentDashboardScreen()),
+                    (route) => route.settings.name == '/home' || route.isFirst,
+                  );
+                }
               } else if (index == 5) {
                 // Messages
                 Navigator.of(context).pushAndRemoveUntil(

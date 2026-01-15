@@ -18,7 +18,7 @@ class AppBottomNavigationBar extends StatelessWidget {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         final isAdmin = authProvider.isAdmin;
-        final navItems = isAdmin ? 5 : 4;
+        final isAgent = authProvider.isAgent;
         
         return Container(
           decoration: BoxDecoration(
@@ -46,7 +46,9 @@ class AppBottomNavigationBar extends StatelessWidget {
                   _buildNavItem(context, Icons.receipt_long, 'Orders', 2),
                   _buildNavItem(context, Icons.person, 'Profile', 3),
                   if (isAdmin)
-                    _buildNavItem(context, Icons.admin_panel_settings, 'Admin', 4),
+                    _buildNavItem(context, Icons.admin_panel_settings, 'Admin', 4)
+                  else if (isAgent)
+                    _buildNavItem(context, Icons.badge, 'Agent', 4),
                   _buildNavItem(context, Icons.chat_bubble_outline, 'Messages', 5),
                 ],
               ),

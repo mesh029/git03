@@ -6,6 +6,7 @@ import 'home_screen.dart';
 import 'map_screen.dart';
 import 'orders_screen.dart';
 import 'admin_orders_screen.dart';
+import 'agent_dashboard_screen.dart';
 import 'messages_screen.dart';
 import '../models/map_mode.dart';
 import 'package:provider/provider.dart';
@@ -89,12 +90,18 @@ class ProfileScreen extends StatelessWidget {
                   } else if (index == 3) {
                     // Already on profile
                     return;
-                  } else if (index == 4 && authProvider.isAdmin) {
-                    // Admin
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
-                      (route) => false,
-                    );
+                  } else if (index == 4) {
+                    if (authProvider.isAdmin) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                        (route) => false,
+                      );
+                    } else if (authProvider.isAgent) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const AgentDashboardScreen()),
+                        (route) => false,
+                      );
+                    }
                   } else if (index == 5) {
                     // Messages
                     Navigator.of(context).pushAndRemoveUntil(

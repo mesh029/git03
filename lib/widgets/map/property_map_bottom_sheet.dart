@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../models/map_mode.dart';
 import '../../screens/property_detail_screen.dart';
 import '../../screens/home_screen.dart'; // For AppColors
+import 'package:provider/provider.dart';
+import '../../providers/listings_provider.dart';
 
 class PropertyMapBottomSheet extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -17,47 +19,77 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Property type selector
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Row(
-            children: [
-              _buildTypeChip(PropertyType.all),
-              const SizedBox(width: 12),
-              _buildTypeChip(PropertyType.bnb),
-              const SizedBox(width: 12),
-              _buildTypeChip(PropertyType.apartment),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        // Property cards list
-        SizedBox(
-          height: 166,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-            children: _getFilteredProperties().map((property) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 26.0),
-                child: _buildPropertyCard(
-                  property['title']!,
-                  property['rating']!,
-                  property['priceLabel']!,
-                  property['price']!,
-                  property['imageUrl']!,
-                  property['type'] as PropertyType,
-                  isFavorited: property['isFavorited'] as bool,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
+    return Consumer<ListingsProvider>(
+      builder: (context, listingsProvider, _) {
+        final listings = listingsProvider.availableByType(_selectedType);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Property type selector
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                children: [
+                  _buildTypeChip(PropertyType.all),
+                  const SizedBox(width: 12),
+                  _buildTypeChip(PropertyType.bnb),
+                  const SizedBox(width: 12),
+                  _buildTypeChip(PropertyType.apartment),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Property cards list
+            SizedBox(
+              height: 166,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+                itemCount: listings.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 26),
+                itemBuilder: (context, index) {
+                  final l = listings[index];
+                  final imageUrl = l.images.isNotEmpty
+                      ? l.images.first
+                      : 'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51';
+                  return _buildPropertyCard(
+                    l.title,
+                    l.rating.toStringAsFixed(1),
+                    'from',
+                    l.priceLabel,
+                    imageUrl,
+                    l.type,
+                    isFavorited: false,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PropertyDetailScreen(
+                            propertyId: l.id,
+                            title: l.title,
+                            location: l.areaLabel,
+                            price: l.priceLabel,
+                            rating: l.rating.toStringAsFixed(1),
+                            type: l.type,
+                            images: l.images,
+                            details: {
+                              'amenities': l.amenities,
+                              'houseRules': l.houseRules,
+                              'traction': l.traction,
+                              'isAvailable': l.isAvailable,
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -113,53 +145,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
     );
   }
 
-  List<Map<String, dynamic>> _getFilteredProperties() {
-    final allProperties = [
-      {
-        'title': 'Sunset evening avenue',
-        'rating': '4.0',
-        'priceLabel': 'from',
-        'price': '\$299 / night',
-        'imageUrl': 'https://www.figma.com/api/mcp/asset/6c6f1a2c-1f4a-47f7-9bd2-70d2672373a4',
-        'type': PropertyType.bnb,
-        'isFavorited': false,
-      },
-      {
-        'title': 'Milimani BNB',
-        'rating': '4.8',
-        'priceLabel': 'from',
-        'price': '\$150 / night',
-        'imageUrl': 'https://www.figma.com/api/mcp/asset/6c6f1a2c-1f4a-47f7-9bd2-70d2672373a4',
-        'type': PropertyType.bnb,
-        'isFavorited': true,
-      },
-      {
-        'title': '3BR Apartment',
-        'rating': '4.5',
-        'priceLabel': 'from',
-        'price': 'KSh 15,000/month',
-        'imageUrl': 'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51',
-        'type': PropertyType.apartment,
-        'isFavorited': false,
-      },
-      {
-        'title': 'Town Center Studio',
-        'rating': '4.2',
-        'priceLabel': 'from',
-        'price': 'KSh 8,000/month',
-        'imageUrl': 'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51',
-        'type': PropertyType.apartment,
-        'isFavorited': false,
-      },
-    ];
-
-    if (_selectedType == PropertyType.all) {
-      return allProperties;
-    }
-    return allProperties
-        .where((p) => p['type'] == _selectedType)
-        .toList();
-  }
+  // Properties are now sourced from ListingsProvider (agent-managed).
 
   Widget _buildPropertyCard(
     String title,
@@ -169,29 +155,10 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
     String imageUrl,
     PropertyType type, {
     bool isFavorited = false,
+    VoidCallback? onTap,
   }) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PropertyDetailScreen(
-              propertyId: title.toLowerCase().replaceAll(' ', '_'),
-              title: title,
-              location: 'Milimani, Kisumu',
-              price: price,
-              rating: rating,
-              type: type,
-              images: [
-                imageUrl,
-                'https://www.figma.com/api/mcp/asset/6c6f1a2c-1f4a-47f7-9bd2-70d2672373a4',
-                'https://www.figma.com/api/mcp/asset/436a2986-be9d-40e9-a2ff-84927cb2dd51',
-                'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
-              ],
-            ),
-          ),
-        );
-      },
+      onTap: onTap,
       child: Container(
       width: 271,
       height: 166,

@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'providers/order_provider.dart';
 import 'providers/messages_provider.dart';
 import 'providers/map_provider.dart';
+import 'providers/listings_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -24,6 +25,7 @@ class JuaXApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => MessagesProvider()),
         ChangeNotifierProvider(create: (_) => MapProvider()),
+        ChangeNotifierProvider(create: (_) => ListingsProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {

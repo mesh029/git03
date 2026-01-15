@@ -106,6 +106,29 @@ class DummyUsers {
       createdAt: DateTime.now().subtract(const Duration(days: 365)),
       isAdmin: true,
     ),
+    // Agent user (manages Apartments & BnBs inventory)
+    User(
+      id: 'user_agent',
+      name: 'Agent Kenya',
+      email: 'agent@juax.com',
+      phone: '+254700000001',
+      membership: Membership(
+        type: MembershipType.premium,
+        subscriptions: [
+          Subscription(
+            id: 'sub_agent',
+            service: ServiceType.all,
+            duration: SubscriptionDuration.annual,
+            startDate: DateTime.now().subtract(const Duration(days: 30)),
+            endDate: DateTime.now().add(const Duration(days: 335)),
+            isActive: true,
+          ),
+        ],
+        expiresAt: DateTime.now().add(const Duration(days: 335)),
+      ),
+      createdAt: DateTime.now().subtract(const Duration(days: 30)),
+      isAgent: true,
+    ),
   ];
 }
 
@@ -117,6 +140,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
   bool get isAdmin => _currentUser?.isAdmin ?? false;
+  bool get isAgent => _currentUser?.isAgent ?? false;
 
   // Login with email and password
   Future<bool> login(String email, String password) async {

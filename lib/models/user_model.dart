@@ -9,6 +9,7 @@ class User {
   final Membership membership;
   final DateTime createdAt;
   final bool isAdmin;
+  final bool isAgent;
 
   User({
     required this.id,
@@ -18,6 +19,7 @@ class User {
     required this.membership,
     required this.createdAt,
     this.isAdmin = false,
+    this.isAgent = false,
   });
 
   // Convert to JSON for database
@@ -30,6 +32,7 @@ class User {
       'membership': membership.toJson(),
       'createdAt': createdAt.toIso8601String(),
       'isAdmin': isAdmin,
+      'isAgent': isAgent,
     };
   }
 
@@ -43,6 +46,7 @@ class User {
       membership: Membership.fromJson(json['membership'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
       isAdmin: json['isAdmin'] as bool? ?? false,
+      isAgent: json['isAgent'] as bool? ?? false,
     );
   }
 }

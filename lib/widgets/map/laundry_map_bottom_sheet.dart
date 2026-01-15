@@ -37,6 +37,25 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
   int get _totalItems => _shirts + _pants + _dresses + _shoes + _bedding + _towels;
   double get _estimatedWeight => (_totalItems * 0.3).clamp(0.5, 50.0); // ~0.3kg per item average
 
+  double get _effectiveWeightKg {
+    if (_inputMethod == QuantityInputMethod.weight) return _weightKg;
+    return _estimatedWeight;
+  }
+
+  int _turnaroundDaysForKg(double kg) {
+    // Simple, predictable rule (tweak anytime):
+    // <=3kg: 1 day, <=8kg: 2 days, <=15kg: 3 days, else: 4 days
+    if (kg <= 3.0) return 1;
+    if (kg <= 8.0) return 2;
+    if (kg <= 15.0) return 3;
+    return 4;
+  }
+
+  DateTime _readyByForKg(double kg) {
+    final days = _turnaroundDaysForKg(kg);
+    return DateTime.now().add(Duration(days: days));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -64,6 +83,8 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
             const SizedBox(height: 20),
             // Price estimate
             _buildPriceEstimate(),
+            const SizedBox(height: 16),
+            _buildTurnaroundEstimate(),
             const SizedBox(height: 20),
             // Book button
             _buildBookButton(context),
@@ -667,6 +688,69 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     );
   }
 
+  Widget _buildTurnaroundEstimate() {
+    final hasQuantity = (_inputMethod == QuantityInputMethod.items && _totalItems > 0) ||
+        (_inputMethod == QuantityInputMethod.weight && _weightKg > 0);
+    if (!hasQuantity) return const SizedBox.shrink();
+
+    final kg = _effectiveWeightKg;
+    final days = _turnaroundDaysForKg(kg);
+    final readyBy = _readyByForKg(kg);
+
+    String fmt(DateTime dt) =>
+        '${dt.day}/${dt.month}/${dt.year}';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              Icons.schedule,
+              color: Theme.of(context).colorScheme.primary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Estimated turnaround',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$days day${days == 1 ? '' : 's'} • Ready by ${fmt(readyBy)}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Based on ~${kg.toStringAsFixed(1)} kg',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBookButton(BuildContext context) {
     final isValid = (_selectedLocation == 'current' ||
             (_selectedLocation == 'station' && _selectedStation != null)) &&
@@ -696,6 +780,10 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                 final location = _selectedLocation == 'current' 
                     ? 'Current Location' 
                     : (_selectedStation ?? 'Pickup Station');
+
+                final weightKg = _effectiveWeightKg;
+                final turnaroundDays = _turnaroundDaysForKg(weightKg);
+                final readyBy = _readyByForKg(weightKg);
                 
                 // Build items list
                 final items = <String>[];
@@ -717,10 +805,15 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                   status: OrderStatus.pending,
                   details: {
                     'quantity': quantity,
+                    'itemCount': _totalItems,
+                    'weightKg': double.parse(weightKg.toStringAsFixed(1)),
+                    'turnaroundDays': turnaroundDays,
+                    'readyBy': readyBy.toIso8601String(),
                     'method': _selectedLocation == 'current' ? 'Pickup' : 'Drop-off',
                     'location': location,
                     'pickupLocation': pickupLocation,
                     'dropoffLocation': dropoffLocation,
+                    'pickupStation': _selectedStation,
                     'items': items,
                     'serviceType': _serviceType == 'wash_fold' ? 'Wash & Fold' : 'Dry Clean',
                     'customerName': user.name,

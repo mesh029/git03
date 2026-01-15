@@ -32,59 +32,9 @@ class MapProvider extends ChangeNotifier {
 
   /// Initialize placeholder markers (apartments, BnBs, services)
   void _initializePlaceholderLocations() {
-    // Sample locations around Kisumu, Kenya - spread out for visibility
+    // Sample service locations (laundry/cleaning stations).
+    // Apartments/BnBs are now agent-managed via ListingsProvider and should not be hardcoded here.
     _placeholderLocations = [
-      // Apartments - spread around the city
-      MapLocation(
-        latitude: -0.0917,
-        longitude: 34.7680,
-        id: 'apt_1',
-        name: 'Milimani Apartments',
-        type: MapLocationType.apartment,
-      ),
-      MapLocation(
-        latitude: -0.0950,
-        longitude: 34.7700,
-        id: 'apt_2',
-        name: 'Lakeside Residences',
-        type: MapLocationType.apartment,
-      ),
-      MapLocation(
-        latitude: -0.0880,
-        longitude: 34.7650,
-        id: 'apt_3',
-        name: 'City View Apartments',
-        type: MapLocationType.apartment,
-      ),
-      MapLocation(
-        latitude: -0.0850,
-        longitude: 34.7720,
-        id: 'apt_4',
-        name: 'Riverside Apartments',
-        type: MapLocationType.apartment,
-      ),
-      // BnBs
-      MapLocation(
-        latitude: -0.0930,
-        longitude: 34.7690,
-        id: 'bnb_1',
-        name: 'Lake Victoria BnB',
-        type: MapLocationType.bnb,
-      ),
-      MapLocation(
-        latitude: -0.0900,
-        longitude: 34.7670,
-        id: 'bnb_2',
-        name: 'Kisumu Guest House',
-        type: MapLocationType.bnb,
-      ),
-      MapLocation(
-        latitude: -0.0870,
-        longitude: 34.7710,
-        id: 'bnb_3',
-        name: 'Sunset BnB',
-        type: MapLocationType.bnb,
-      ),
       // Service locations
       MapLocation(
         latitude: -0.0920,
