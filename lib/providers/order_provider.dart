@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/order_model.dart';
 import '../models/user_model.dart';
 import 'auth_provider.dart';
+import '../services/local_storage_service.dart';
 
 // Dummy orders database - replace with API later
 class DummyOrders {
@@ -156,6 +157,30 @@ class OrderProvider extends ChangeNotifier {
   List<Order> get orders => _orders;
   bool get isLoading => _isLoading;
 
+  OrderProvider() {
+    _restoreOrders();
+  }
+
+  Future<void> _restoreOrders() async {
+    try {
+      final stored = await LocalStorageService.getOrdersJson();
+      if (stored != null) {
+        DummyOrders.allOrders
+          ..clear()
+          ..addAll(stored.map(Order.fromJson));
+      } else {
+        // First run: persist seeded orders
+        await LocalStorageService.setOrdersJson(DummyOrders.allOrders.map((o) => o.toJson()).toList());
+      }
+    } catch (_) {
+      // ignore (fallback to seed)
+    }
+  }
+
+  Future<void> _persistOrders() async {
+    await LocalStorageService.setOrdersJson(DummyOrders.allOrders.map((o) => o.toJson()).toList());
+  }
+
   // Load all orders for admin
   Future<void> loadAllOrders() async {
     _isAdminView = true;
@@ -194,6 +219,7 @@ class OrderProvider extends ChangeNotifier {
 
     // Add to dummy database
     DummyOrders.allOrders.add(order);
+    await _persistOrders();
     
     // Reload orders for whichever view is active
     if (_isAdminView) {
@@ -229,6 +255,7 @@ class OrderProvider extends ChangeNotifier {
         amount: order.amount,
       );
       DummyOrders.allOrders[orderIndex] = updatedOrder;
+      await _persistOrders();
       
       // Reload orders if for current user
       if (_currentUserId != null) {

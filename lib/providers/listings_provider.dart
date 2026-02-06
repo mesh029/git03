@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import '../models/map_mode.dart';
 import '../models/property_listing.dart';
+import '../services/local_storage_service.dart';
 
 /// In-memory listings provider (dummy DB).
 /// Later swap with API + persistence.
@@ -19,7 +20,29 @@ class ListingsProvider extends ChangeNotifier {
   }
 
   ListingsProvider() {
+    _restoreOrSeed();
+  }
+
+  Future<void> _restoreOrSeed() async {
+    final restored = await LocalStorageService.getListingsJson();
+    if (restored != null) {
+      try {
+        _listings
+          ..clear()
+          ..addAll(restored.map(PropertyListing.fromJson));
+        notifyListeners();
+        return;
+      } catch (_) {
+        // fallthrough to seed
+      }
+    }
     _seed();
+    await _persist();
+    notifyListeners();
+  }
+
+  Future<void> _persist() async {
+    await LocalStorageService.setListingsJson(_listings.map((l) => l.toJson()).toList());
   }
 
   void _seed() {
@@ -112,6 +135,7 @@ class ListingsProvider extends ChangeNotifier {
 
   void addListing(PropertyListing listing) {
     _listings.add(listing);
+    _persist();
     notifyListeners();
   }
 
@@ -119,6 +143,7 @@ class ListingsProvider extends ChangeNotifier {
     final idx = _listings.indexWhere((l) => l.id == updated.id);
     if (idx == -1) return;
     _listings[idx] = updated.copyWith(updatedAt: DateTime.now());
+    _persist();
     notifyListeners();
   }
 
@@ -129,11 +154,13 @@ class ListingsProvider extends ChangeNotifier {
       isAvailable: isAvailable,
       updatedAt: DateTime.now(),
     );
+    _persist();
     notifyListeners();
   }
 
   void removeListing(String listingId) {
     _listings.removeWhere((l) => l.id == listingId);
+    _persist();
     notifyListeners();
   }
 }

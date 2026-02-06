@@ -549,10 +549,12 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
       }
 
       final itemCount = order.details['itemCount'];
+      final basketCount = order.details['basketCount'];
       final weightKg = order.details['weightKg'];
-      if (itemCount != null || weightKg != null) {
+      if (itemCount != null || basketCount != null || weightKg != null) {
         final parts = <String>[];
         if (itemCount != null) parts.add('$itemCount items');
+        if (basketCount != null) parts.add('$basketCount basket${basketCount == 1 ? '' : 's'}');
         if (weightKg != null) parts.add('~${weightKg.toString()} kg');
         details.add(_buildInfoRow(
           context,

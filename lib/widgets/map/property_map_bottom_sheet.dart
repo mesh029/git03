@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/map_mode.dart';
 import '../../screens/property_detail_screen.dart';
-import '../../screens/home_screen.dart'; // For AppColors
+import '../../theme/app_theme.dart';
 import 'package:provider/provider.dart';
 import '../../providers/listings_provider.dart';
 
@@ -218,7 +218,7 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                           ),
                           decoration: BoxDecoration(
                             color: type == PropertyType.bnb
-                                ? AppColors.accent
+                                ? Theme.of(context).colorScheme.secondary
                                 : Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -266,10 +266,10 @@ class _PropertyMapBottomSheetState extends State<PropertyMapBottomSheet> {
                       children: List.generate(4, (index) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 4.0),
-                          child: const Icon(
+                          child: Icon(
                             Icons.star,
                             size: 14,
-                            color: AppColors.accent,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         );
                       }),

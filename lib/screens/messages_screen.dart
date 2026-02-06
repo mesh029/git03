@@ -21,6 +21,7 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
+
   @override
   void initState() {
     super.initState();
@@ -413,8 +414,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final messagesProvider = Provider.of<MessagesProvider>(context, listen: false);
       messagesProvider.loadMessages(widget.conversation.id);
+      // Mark as read when opening the thread (for the current user)
+      if (authProvider.currentUser != null) {
+        messagesProvider.markAsRead(widget.conversation.id, authProvider.currentUser!.id);
+        messagesProvider.loadConversations(authProvider.currentUser!.id);
+      }
       _scrollToBottom();
     });
   }
@@ -682,6 +689,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     
     // Reload messages to ensure UI updates
     await messagesProvider.loadMessages(widget.conversation.id);
+    await messagesProvider.markAsRead(widget.conversation.id, senderId);
+    await messagesProvider.loadConversations(senderId);
     _scrollToBottom();
   }
 }

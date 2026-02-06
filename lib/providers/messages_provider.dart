@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../services/local_storage_service.dart';
 import '../models/message_model.dart';
 import '../models/user_model.dart';
 import 'auth_provider.dart' show DummyUsers;
@@ -171,6 +172,16 @@ class DummyMessages {
   }
 
   static String getConversationId(String userId1, String userId2) {
+    // Backward compatible mapping for seeded demo conversations
+    // (seed data uses legacy IDs like conv_admin_premium)
+    final a = userId1;
+    final b = userId2;
+    bool pair(String x, String y) => (a == x && b == y) || (a == y && b == x);
+
+    if (pair('user_admin', 'user_premium_all')) return 'conv_admin_premium';
+    if (pair('user_admin', 'user_freemium')) return 'conv_admin_freemium';
+    if (pair('user_premium_all', 'user_freemium')) return 'conv_premium_freemium';
+
     final sorted = [userId1, userId2]..sort();
     return 'conv_${sorted[0]}_${sorted[1]}';
   }
@@ -199,6 +210,33 @@ class MessagesProvider extends ChangeNotifier {
   List<Message> get currentMessages => _currentMessages;
   String? get currentConversationId => _currentConversationId;
   bool get isLoading => _isLoading;
+
+  MessagesProvider() {
+    _restoreMessages();
+  }
+
+  Future<void> _restoreMessages() async {
+    try {
+      final stored = await LocalStorageService.getMessagesJson();
+      if (stored != null) {
+        DummyMessages.allMessages
+          ..clear()
+          ..addAll(stored.map(Message.fromJson));
+      } else {
+        await LocalStorageService.setMessagesJson(
+          DummyMessages.allMessages.map((m) => m.toJson()).toList(),
+        );
+      }
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  Future<void> _persistMessages() async {
+    await LocalStorageService.setMessagesJson(
+      DummyMessages.allMessages.map((m) => m.toJson()).toList(),
+    );
+  }
 
   // Load conversations for a user
   Future<void> loadConversations(String userId) async {
@@ -252,6 +290,7 @@ class MessagesProvider extends ChangeNotifier {
 
     // Add message to dummy database
     DummyMessages.allMessages.add(message);
+    await _persistMessages();
     
     // Update current messages if we're viewing this conversation
     if (_currentConversationId == conversationId) {
@@ -267,12 +306,30 @@ class MessagesProvider extends ChangeNotifier {
 
   // Mark messages as read
   Future<void> markAsRead(String conversationId, String userId) async {
-    for (var message in DummyMessages.allMessages) {
-      if (message.conversationId == conversationId &&
-          message.receiverId == userId &&
-          !message.isRead) {
-        // In a real app, update in database
-        // For now, we'll just update the local state
+    bool changed = false;
+    for (var i = 0; i < DummyMessages.allMessages.length; i++) {
+      final msg = DummyMessages.allMessages[i];
+      if (msg.conversationId == conversationId &&
+          msg.receiverId == userId &&
+          !msg.isRead) {
+        DummyMessages.allMessages[i] = Message(
+          id: msg.id,
+          conversationId: msg.conversationId,
+          senderId: msg.senderId,
+          receiverId: msg.receiverId,
+          content: msg.content,
+          type: msg.type,
+          timestamp: msg.timestamp,
+          isRead: true,
+        );
+        changed = true;
+      }
+    }
+    await _persistMessages();
+    if (changed) {
+      _conversations = DummyMessages.getConversationsForUser(userId);
+      if (_currentConversationId == conversationId) {
+        _currentMessages = DummyMessages.getMessagesForConversation(conversationId);
       }
     }
     notifyListeners();

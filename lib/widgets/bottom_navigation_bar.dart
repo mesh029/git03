@@ -61,16 +61,33 @@ class AppBottomNavigationBar extends StatelessWidget {
 
   Widget _buildNavItem(BuildContext context, IconData icon, String label, int index) {
     final isActive = currentIndex == index;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Expanded(
       child: GestureDetector(
         onTap: () => onTap(index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          decoration: BoxDecoration(
+            color: isActive 
+                ? (isDark 
+                    ? colorScheme.primaryContainer.withOpacity(0.2)
+                    : colorScheme.primaryContainer.withOpacity(0.15))
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFFBCBCBC),
+                color: isActive 
+                    ? colorScheme.primary 
+                    : (isDark 
+                        ? colorScheme.onSurfaceVariant 
+                        : colorScheme.onSurfaceVariant),
               size: 24,
             ),
             const SizedBox(height: 4),
@@ -78,11 +95,17 @@ class AppBottomNavigationBar extends StatelessWidget {
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                color: isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFFBCBCBC),
+                  fontSize: 11,
+                  color: isActive 
+                      ? colorScheme.primary 
+                      : (isDark 
+                          ? colorScheme.onSurfaceVariant 
+                          : colorScheme.onSurfaceVariant),
               ),
               textAlign: TextAlign.center,
             ),
           ],
+          ),
         ),
       ),
     );

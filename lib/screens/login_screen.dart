@@ -405,17 +405,33 @@ class _LoginScreenState extends State<LoginScreen> {
     Color color,
   ) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         // Auto-fill credentials
         _emailController.text = email;
         _passwordController.text = password;
         
-        // Trigger validation and auto-login
-        if (_formKey.currentState!.validate()) {
-          _handleLogin();
-        } else {
-          // If validation fails, just set the state to trigger rebuild
-          setState(() {});
+        // Directly call login without form validation for quick login
+        setState(() => _isLoading = true);
+        
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final success = await authProvider.login(
+          email.trim(),
+          password,
+        );
+        
+        setState(() => _isLoading = false);
+        
+        if (success && mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Login failed. Please try again.'),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
         }
       },
       borderRadius: BorderRadius.circular(20),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/map_mode.dart';
-import 'home_screen.dart'; // For AppColors
+import '../theme/app_theme.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   final String propertyId;
@@ -93,15 +92,15 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: widget.type == PropertyType.bnb
-                          ? AppColors.accent.withOpacity(0.1)
-                          : Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.14)
+                          : Theme.of(context).colorScheme.primary.withValues(alpha: 0.14),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       widget.type.label,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: widget.type == PropertyType.bnb
-                            ? AppColors.accent
+                            ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
@@ -137,7 +136,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                         children: [
                           Icon(
                             Icons.star,
-                            color: AppColors.accent,
+                            color: Theme.of(context).colorScheme.secondary,
                             size: 18,
                           ),
                           const SizedBox(width: 4),

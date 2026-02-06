@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import '../providers/auth_provider.dart';
+import 'home_screen.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -34,8 +37,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Navigate to login after animation
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
+        final auth = Provider.of<AuthProvider>(context, listen: false);
+        final next = auth.isAuthenticated ? const HomeScreen() : const LoginScreen();
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          MaterialPageRoute(builder: (context) => next),
         );
       }
     });

@@ -4,7 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../models/order_model.dart';
 
-enum QuantityInputMethod { items, weight }
+enum QuantityInputMethod { items, weight, baskets }
 
 class LaundryMapBottomSheet extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -30,6 +30,10 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
   
   // Weight-based quantity
   double _weightKg = 1.0;
+
+  // Basket-based quantity
+  int _baskets = 1;
+  static const double _kgPerBasket = 6.0; // tweak anytime (typical medium basket)
   
   // Service type
   String _serviceType = 'wash_fold'; // 'wash_fold' or 'dry_clean'
@@ -39,6 +43,7 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
 
   double get _effectiveWeightKg {
     if (_inputMethod == QuantityInputMethod.weight) return _weightKg;
+    if (_inputMethod == QuantityInputMethod.baskets) return (_baskets * _kgPerBasket).clamp(0.5, 50.0);
     return _estimatedWeight;
   }
 
@@ -294,6 +299,13 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                   QuantityInputMethod.weight,
                 ),
               ),
+              Expanded(
+                child: _buildMethodTab(
+                  'Baskets',
+                  Icons.shopping_basket,
+                  QuantityInputMethod.baskets,
+                ),
+              ),
             ],
           ),
         ),
@@ -352,9 +364,86 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
   Widget _buildQuantityInput() {
     if (_inputMethod == QuantityInputMethod.items) {
       return _buildItemCountInput();
-    } else {
+    } else if (_inputMethod == QuantityInputMethod.weight) {
       return _buildWeightInput();
+    } else {
+      return _buildBasketInput();
     }
+  }
+
+  Widget _buildBasketInput() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.shopping_basket, size: 18, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 8),
+              Text('Laundry baskets', style: Theme.of(context).textTheme.titleMedium),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '~${_effectiveWeightKg.toStringAsFixed(1)} kg',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Baskets', style: Theme.of(context).textTheme.bodyMedium),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: _baskets > 1 ? () => setState(() => _baskets -= 1) : null,
+                    color: Theme.of(context).colorScheme.primary,
+                    iconSize: 24,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  Container(
+                    width: 44,
+                    alignment: Alignment.center,
+                    child: Text('$_baskets', style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline),
+                    onPressed: () => setState(() => _baskets += 1),
+                    color: Theme.of(context).colorScheme.primary,
+                    iconSize: 24,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Estimate: 1 basket ≈ ${_kgPerBasket.toStringAsFixed(0)} kg',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildItemCountInput() {
@@ -624,9 +713,12 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     if (_inputMethod == QuantityInputMethod.items) {
       // Item-based is more expensive due to mixed weights (heavy + light clothes)
       basePrice = _totalItems * 80; // KSh 80 per item (more expensive)
-    } else {
+    } else if (_inputMethod == QuantityInputMethod.weight) {
       // Weight-based is cheaper - straightforward pricing
       basePrice = _weightKg * 150; // KSh 150 per kg (cheaper)
+    } else {
+      // Basket-based: priced per basket (simple for customers)
+      basePrice = _baskets * 700; // KSh 700 per basket (tweak anytime)
     }
     
     if (_serviceType == 'dry_clean') {
@@ -641,9 +733,11 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     if (_inputMethod == QuantityInputMethod.items) {
       // Item-based is more expensive due to mixed weights (heavy + light clothes)
       basePrice = _totalItems * 80; // KSh 80 per item (more expensive)
-    } else {
+    } else if (_inputMethod == QuantityInputMethod.weight) {
       // Weight-based is cheaper - straightforward pricing
       basePrice = _weightKg * 150; // KSh 150 per kg (cheaper)
+    } else {
+      basePrice = _baskets * 700;
     }
     
     if (_serviceType == 'dry_clean') {
@@ -690,7 +784,8 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
 
   Widget _buildTurnaroundEstimate() {
     final hasQuantity = (_inputMethod == QuantityInputMethod.items && _totalItems > 0) ||
-        (_inputMethod == QuantityInputMethod.weight && _weightKg > 0);
+        (_inputMethod == QuantityInputMethod.weight && _weightKg > 0) ||
+        (_inputMethod == QuantityInputMethod.baskets && _baskets > 0);
     if (!hasQuantity) return const SizedBox.shrink();
 
     final kg = _effectiveWeightKg;
@@ -755,7 +850,8 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
     final isValid = (_selectedLocation == 'current' ||
             (_selectedLocation == 'station' && _selectedStation != null)) &&
         ((_inputMethod == QuantityInputMethod.items && _totalItems > 0) ||
-            (_inputMethod == QuantityInputMethod.weight && _weightKg > 0));
+            (_inputMethod == QuantityInputMethod.weight && _weightKg > 0) ||
+            (_inputMethod == QuantityInputMethod.baskets && _baskets > 0));
 
     return SizedBox(
       width: double.infinity,
@@ -775,7 +871,9 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
 
                 final quantity = _inputMethod == QuantityInputMethod.items
                     ? _totalItems
-                    : _weightKg.toInt();
+                    : _inputMethod == QuantityInputMethod.weight
+                        ? _weightKg.toInt()
+                        : _baskets;
                 
                 final location = _selectedLocation == 'current' 
                     ? 'Current Location' 
@@ -806,6 +904,8 @@ class _LaundryMapBottomSheetState extends State<LaundryMapBottomSheet> {
                   details: {
                     'quantity': quantity,
                     'itemCount': _totalItems,
+                    'basketCount': _baskets,
+                    'quantityMethod': _inputMethod.name,
                     'weightKg': double.parse(weightKg.toStringAsFixed(1)),
                     'turnaroundDays': turnaroundDays,
                     'readyBy': readyBy.toIso8601String(),

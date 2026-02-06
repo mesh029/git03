@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 import '../models/membership_model.dart';
+import '../services/local_storage_service.dart';
 
 // Dummy users database - replace with API later
 class DummyUsers {
@@ -135,12 +136,36 @@ class DummyUsers {
 class AuthProvider extends ChangeNotifier {
   User? _currentUser;
   bool _isLoading = false;
+  bool _hasRestoredSession = false;
 
   User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
   bool get isAdmin => _currentUser?.isAdmin ?? false;
   bool get isAgent => _currentUser?.isAgent ?? false;
+  bool get hasRestoredSession => _hasRestoredSession;
+
+  AuthProvider() {
+    _restoreSession();
+  }
+
+  Future<void> _restoreSession() async {
+    try {
+      final email = await LocalStorageService.getCurrentUserEmail();
+      if (email != null) {
+        final user = DummyUsers.users.firstWhere(
+          (u) => u.email == email,
+          orElse: () => DummyUsers.users.first,
+        );
+        _currentUser = user;
+      }
+    } catch (_) {
+      // ignore
+    } finally {
+      _hasRestoredSession = true;
+      notifyListeners();
+    }
+  }
 
   // Login with email and password
   Future<bool> login(String email, String password) async {
@@ -151,9 +176,10 @@ class AuthProvider extends ChangeNotifier {
     await Future.delayed(const Duration(seconds: 1));
 
     try {
+      final normalizedEmail = email.trim().toLowerCase();
       // Find user by email (dummy authentication)
       final user = DummyUsers.users.firstWhere(
-        (u) => u.email == email,
+        (u) => u.email.trim().toLowerCase() == normalizedEmail,
         orElse: () => throw Exception('User not found'),
       );
 
@@ -161,6 +187,7 @@ class AuthProvider extends ChangeNotifier {
       // For now, any password works for demo
 
       _currentUser = user;
+      await LocalStorageService.setCurrentUserEmail(user.email);
       _isLoading = false;
       notifyListeners();
       return true;
@@ -205,6 +232,7 @@ class AuthProvider extends ChangeNotifier {
       DummyUsers.users.add(newUser);
 
       _currentUser = newUser;
+      await LocalStorageService.setCurrentUserEmail(newUser.email);
       _isLoading = false;
       notifyListeners();
       return true;
@@ -218,6 +246,7 @@ class AuthProvider extends ChangeNotifier {
   // Logout
   void logout() {
     _currentUser = null;
+    LocalStorageService.setCurrentUserEmail(null);
     notifyListeners();
   }
 }

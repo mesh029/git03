@@ -10,34 +10,11 @@ import 'agent_dashboard_screen.dart';
 import 'messages_screen.dart';
 import '../models/map_mode.dart';
 import '../widgets/bottom_navigation_bar.dart';
-import '../widgets/search_bar_widget.dart';
 import '../providers/theme_provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/map_provider.dart';
 import '../providers/listings_provider.dart';
 import '../services/map/location_name_service.dart';
-
-// Spotify-inspired color constants
-class AppColors {
-  // Spotify green - vibrant primary color
-  static const primary = Color(0xFF1DB954); // Spotify green
-  static const primaryDark = Color(0xFF1DB954); // Same green in dark mode
-  
-  // Accent (for ratings, highlights)
-  static const accent = Color(0xFFFFD700); // Gold for ratings (like Spotify uses for premium)
-  
-  // Light mode (Spotify uses white/very light)
-  static const lightBackground = Color(0xFFFFFFFF);
-  static const lightSurface = Color(0xFFFFFFFF);
-  static const lightTextPrimary = Color(0xFF000000);
-  static const lightTextSecondary = Color(0xFF6A6A6A);
-  
-  // Dark mode (Spotify uses pure black)
-  static const darkBackground = Color(0xFF000000);
-  static const darkSurface = Color(0xFF121212);
-  static const darkTextPrimary = Color(0xFFFFFFFF);
-  static const darkTextSecondary = Color(0xFFB3B3B3);
-}
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -136,367 +113,169 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Top section - flat, no gradient
+            // Hero section - Clean, theme-based
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+              padding: const EdgeInsets.fromLTRB(20, 32, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header with greeting and profile
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Consumer2<AuthProvider, MapProvider>(
-                          builder: (context, authProvider, mapProvider, _) {
-                            final user = authProvider.currentUser;
-                            final userName = user?.name ?? 'Guest';
-                            final greeting = _getGreeting();
-                            
-                            // Get user's actual location
-                            final userLocation = mapProvider.userLocation;
-                            final locationName = _getLocationName(
-                              userLocation?.latitude,
-                              userLocation?.longitude,
-                            );
-                            final isInKisumu = _isInKisumuArea(
-                              userLocation?.latitude,
-                              userLocation?.longitude,
-                            );
-                            
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                  Expanded(
+                    child: Consumer2<AuthProvider, MapProvider>(
+                      builder: (context, authProvider, mapProvider, _) {
+                        final user = authProvider.currentUser;
+                        final userName = user?.name ?? 'Guest';
+                        final greeting = _getGreeting();
+                        
+                        // Get user's actual location
+                        final userLocation = mapProvider.userLocation;
+                        final locationName = _getLocationName(
+                          userLocation?.latitude,
+                          userLocation?.longitude,
+                        );
+                        
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Location - theme-based
+                            Row(
                               children: [
-                                Text(
-                                  greeting,
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                Icon(
+                                  Icons.location_on,
+                                  size: 12,
+                                  color: Theme.of(context).textTheme.bodySmall?.color,
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  userName,
-                                  style: Theme.of(context).textTheme.displaySmall,
-                                ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      size: 14,
-                                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Expanded(
-                                      child: Text(
-                                        mapProvider.isLoadingLocation 
-                                            ? 'Getting location...'
-                                            : locationName,
-                                        style: Theme.of(context).textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // Show message if outside Kisumu
-                                if (!mapProvider.isLoadingLocation && 
-                                    userLocation != null && 
-                                    !isInKisumu)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.info_outline,
-                                            size: 16,
-                                            color: Theme.of(context).colorScheme.primary,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              'Services in your area coming soon. You can still browse!',
-                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                                color: Theme.of(context).colorScheme.primary,
-                                                fontSize: 11,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    mapProvider.isLoadingLocation 
+                                        ? 'Getting location...'
+                                        : locationName,
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      // Dark mode toggle and profile - minimal, no shadows
-                      Row(
-                        children: [
-                          Consumer<ThemeProvider>(
-                            builder: (context, themeProvider, _) {
-                              return IconButton(
-                                icon: Icon(
-                                  themeProvider.isDarkMode
-                                      ? Icons.light_mode
-                                      : Icons.dark_mode,
-                                  color: Theme.of(context).iconTheme.color,
-                                  size: 22,
                                 ),
-                                onPressed: () {
-                                  themeProvider.toggleTheme();
-                                },
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            // Greeting
+                            Text(
+                              greeting,
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            // User name
+                            Text(
+                              userName,
+                              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  // Search bar
-                  const SearchBarWidget(),
-                  const SizedBox(height: 24),
+                  // Dark mode toggle - minimal
+                  Consumer<ThemeProvider>(
+                    builder: (context, themeProvider, _) {
+                      return IconButton(
+                        icon: Icon(
+                          themeProvider.isDarkMode
+                              ? Icons.light_mode
+                              : Icons.dark_mode,
+                          color: Theme.of(context).iconTheme.color,
+                          size: 22,
+                        ),
+                        onPressed: () {
+                          themeProvider.toggleTheme();
+                        },
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
+            const SizedBox(height: 32),
             // Content area
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Quick Access section - icon + label rows (Spotify style)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Quick Access',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 16),
-                          _buildQuickAccessRow(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Primary hero card - Saka Keja (largest, highest visual weight)
+                      _buildAirbnbServiceCard(
+                        context,
+                        title: 'Saka Keja',
+                        subtitle: 'Find apartments and BnBs',
+                        icon: Icons.home,
+                        isPrimary: true,
+                        onTap: () {
+                          Navigator.push(
                             context,
-                            icon: Icons.local_laundry_service,
-                            label: 'Fresh Keja',
-                            subtitle: 'Laundry & cleaning',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const FreshKejaServiceScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          _buildQuickAccessRow(
-                            context,
-                            icon: Icons.home,
-                            label: 'Saka Keja',
-                            subtitle: 'Find properties',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.properties,
-                                    data: {'service': 'Saka Keja', 'type': 'all'},
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          _buildQuickAccessRow(
-                            context,
-                            icon: Icons.directions_car,
-                            label: 'RideX',
-                            subtitle: 'Coming soon',
-                            onTap: null,
-                            isDisabled: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Popular Services section - simplified list
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Popular Services',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 16),
-                          _buildServiceRow(
-                            context,
-                            icon: Icons.local_laundry_service,
-                            title: 'Fresh Keja',
-                            subtitle: 'Laundry & house cleaning',
-                            rating: '4.8',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const FreshKejaServiceScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          _buildServiceRow(
-                            context,
-                            icon: Icons.home,
-                            title: 'Saka Keja',
-                            subtitle: 'BNBs & apartments',
-                            rating: '4.9',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.properties,
-                                    data: {'service': 'Saka Keja', 'type': 'all'},
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Service Areas section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Service Areas',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
-                    ),
-                    // Service areas cards - Kisumu neighborhoods
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const MapScreen(
-                                      mode: MapMode.properties,
-                                      data: {'area': 'Milimani'},
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: _buildServiceAreaCard(
-                                context,
-                                'Milimani',
-                                12,
-                                8,
-                                'https://www.figma.com/api/mcp/asset/872fc196-1cb2-42e8-84b0-aa58f49abd5e',
+                            MaterialPageRoute(
+                              builder: (context) => const MapScreen(
+                                mode: MapMode.properties,
+                                data: {'service': 'Saka Keja', 'type': 'all'},
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 25),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const MapScreen(
-                                      mode: MapMode.properties,
-                                      data: {'area': 'Town Center'},
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: _buildServiceAreaCard(
-                                context,
-                                'Town Center',
-                                24,
-                                15,
-                                'https://www.figma.com/api/mcp/asset/36b3c108-6c7b-47dd-8836-3cfe30bafb86',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const MapScreen(
-                                      mode: MapMode.properties,
-                                      data: {'area': 'Nyalenda'},
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: _buildServiceAreaCard(
-                                context,
-                                'Nyalenda',
-                                18,
-                                12,
-                                'https://www.figma.com/api/mcp/asset/8cc9e310-660f-4428-a71a-c224d2279138',
-                              ),
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Featured Listings section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Featured Listings',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                      const SizedBox(height: 16),
+                      // Secondary service card - Laundry (same pattern, less emphasis)
+                      _buildAirbnbServiceCard(
+                        context,
+                        title: 'Laundry (Mama Fua)',
+                        subtitle: 'Book laundry and cleaning services',
+                        icon: Icons.local_laundry_service,
+                        isPrimary: false,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FreshKejaServiceScreen(),
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    // Featured listings - properties only (database-ready)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Consumer<ListingsProvider>(
+                      const SizedBox(height: 32),
+                      // Other services section
+                      Text(
+                        'Other services',
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildOtherServiceRow(
+                        context,
+                        icon: Icons.directions_car,
+                        label: 'RideX',
+                        subtitle: 'Coming soon',
+                      ),
+                      const SizedBox(height: 32),
+                      // Featured Listings section
+                      Text(
+                        'Featured Listings',
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Consumer<ListingsProvider>(
                         builder: (context, listingsProvider, _) {
                           final listings = listingsProvider.availableListings;
-                          if (listings.isEmpty) return const SizedBox.shrink();
+                          if (listings.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
 
                           final first = listings.first;
                           return Column(
@@ -532,112 +311,63 @@ class HomeScreen extends StatelessWidget {
                                   first.rating.toStringAsFixed(1),
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                height: 138,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: listings.length > 1 ? listings.length - 1 : 0,
-                                  separatorBuilder: (context, index) => const SizedBox(width: 12),
-                                  itemBuilder: (context, index) {
-                                    final l = listings[index + 1];
-                                    return SizedBox(
-                                      width: 230,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => PropertyDetailScreen(
-                                                propertyId: l.id,
-                                                title: l.title,
-                                                location: l.areaLabel,
-                                                price: l.priceLabel,
-                                                rating: l.rating.toStringAsFixed(1),
-                                                type: l.type,
-                                                images: l.images,
-                                                details: {
-                                                  'amenities': l.amenities,
-                                                  'houseRules': l.houseRules,
-                                                  'traction': l.traction,
-                                                  'isAvailable': l.isAvailable,
-                                                },
+                              if (listings.length > 1) ...[
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  height: 138,
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(
+                                      parent: AlwaysScrollableScrollPhysics(),
+                                    ),
+                                    itemCount: listings.length - 1,
+                                    separatorBuilder: (context, index) => const SizedBox(width: 12),
+                                    itemBuilder: (context, index) {
+                                      final l = listings[index + 1];
+                                      return SizedBox(
+                                        width: 230,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => PropertyDetailScreen(
+                                                  propertyId: l.id,
+                                                  title: l.title,
+                                                  location: l.areaLabel,
+                                                  price: l.priceLabel,
+                                                  rating: l.rating.toStringAsFixed(1),
+                                                  type: l.type,
+                                                  images: l.images,
+                                                  details: {
+                                                    'amenities': l.amenities,
+                                                    'houseRules': l.houseRules,
+                                                    'traction': l.traction,
+                                                    'isAvailable': l.isAvailable,
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                        child: _buildServiceCard(
-                                          context,
-                                          l.type == PropertyType.bnb ? Icons.hotel : Icons.apartment,
-                                          l.title,
-                                          Theme.of(context).colorScheme.primary,
+                                            );
+                                          },
+                                          child: _buildServiceCard(
+                                            context,
+                                            l.type == PropertyType.bnb ? Icons.hotel : Icons.apartment,
+                                            l.title,
+                                            Theme.of(context).colorScheme.primary,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
+                              ],
                             ],
                           );
                         },
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Quick Actions section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Quick Actions',
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
-                    ),
-                    // Quick action rows
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          _buildQuickAccessRow(
-                            context,
-                            icon: Icons.local_laundry_service,
-                            label: 'Book Fresh Keja service',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.laundry,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          _buildQuickAccessRow(
-                            context,
-                            icon: Icons.home,
-                            label: 'Find vacant houses & rentals',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MapScreen(
-                                    mode: MapMode.properties,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 100), // Space for bottom nav
-                  ],
+                      const SizedBox(height: 100), // Space for bottom nav
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -694,78 +424,343 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Quick Access Row - icon + label (Spotify style, minimal)
-  Widget _buildQuickAccessRow(
+  // Airbnb-style service card - Large, clean, full-width cards with Material 3 colors
+  Widget _buildAirbnbServiceCard(
     BuildContext context, {
+    required String title,
+    required String subtitle,
     required IconData icon,
-    required String label,
-    String? subtitle,
-    VoidCallback? onTap,
+    required bool isPrimary,
     bool isDisabled = false,
+    VoidCallback? onTap,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final primaryColor = colorScheme.primary;
+    final secondaryColor = colorScheme.secondary;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final iconColor = isDisabled 
-        ? Theme.of(context).textTheme.bodySmall?.color
-        : Theme.of(context).colorScheme.primary;
+    final mutedColor = Theme.of(context).textTheme.bodySmall?.color;
+    
+    // UI Design Principle: Cards use consistent surface color, only icons/buttons use accent colors
+    final accentColor = isPrimary ? primaryColor : secondaryColor;
+    
+    // Refactoring UI: Use spacing for hierarchy before color
+    final cardPadding = isPrimary ? 24.0 : 20.0;
+    final iconSize = isPrimary ? 72.0 : 64.0;
+    final iconInnerSize = isPrimary ? 36.0 : 32.0;
+    final titleSize = isPrimary ? 20.0 : 18.0;
+    final shadowElevation = isPrimary ? 12.0 : 8.0;
     
     return InkWell(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(cardPadding),
+        decoration: BoxDecoration(
+          // Consistent card color - all cards use surface/cardColor
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          border: isDisabled 
+              ? Border.all(
+                  color: Theme.of(context).dividerColor,
+                  width: 1,
+                )
+              : null,
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.black.withOpacity(0.06),
+              blurRadius: shadowElevation,
+              offset: Offset(0, isPrimary ? 4 : 2),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
         child: Row(
           children: [
+            // Icon - Left side, using accent color with subtle background
             Container(
-              width: 40,
-              height: 40,
+              width: iconSize,
+              height: iconSize,
               decoration: BoxDecoration(
-                color: iconColor?.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
+                color: isDisabled
+                    ? mutedColor?.withOpacity(0.1)
+                    : accentColor.withOpacity(0.1), // Subtle accent tint
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
-                color: iconColor,
-                size: 20,
+                color: isDisabled ? mutedColor : accentColor, // Accent color for icon
+                size: iconInnerSize,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 20),
+            // Content - Middle, flexible
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    label,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontSize: titleSize,
+                      fontWeight: isPrimary ? FontWeight.w700 : FontWeight.w600,
+                      // Consistent text color on cards
                       color: isDisabled 
-                          ? Theme.of(context).textTheme.bodySmall?.color
-                          : null,
+                          ? mutedColor 
+                          : Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodySmall,
+                  const SizedBox(height: 6),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 14,
+                      // Consistent text color for subtitle
+                      color: isDisabled 
+                          ? mutedColor 
+                          : Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                     ),
-                  ],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
+            // Arrow or badge - Right side
             if (isDisabled)
-              Text(
-                'Soon',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: mutedColor?.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  'Soon',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: mutedColor,
+                  ),
                 ),
               )
             else
               Icon(
-                Icons.chevron_right,
-                size: 20,
+                Icons.arrow_forward_ios,
+                size: 16,
                 color: Theme.of(context).textTheme.bodySmall?.color,
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Primary service card - Following UI design principles
+  // Cards use consistent surface colors, only buttons/icons use accent colors
+  Widget _buildPrimaryServiceCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+    required bool isPrimary,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardPadding = isPrimary ? 24.0 : 20.0;
+    final iconSize = isPrimary ? 56.0 : 48.0;
+    final iconInnerSize = isPrimary ? 28.0 : 24.0;
+    
+    // UI Design Principle: Cards use surface color, only CTAs use primary/secondary
+    // Icon background uses subtle primary/secondary tint, not full container color
+    final iconBgColor = isPrimary 
+        ? colorScheme.primary.withOpacity(0.1)
+        : colorScheme.secondary.withOpacity(0.1);
+    final iconColor = isPrimary 
+        ? colorScheme.primary 
+        : colorScheme.secondary;
+    final buttonColor = isPrimary 
+        ? colorScheme.primary 
+        : colorScheme.secondary;
+    final onButtonColor = isPrimary 
+        ? colorScheme.onPrimary 
+        : colorScheme.onSecondary;
+    
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(cardPadding),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor, // Consistent card color
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.08),
+              blurRadius: isPrimary ? 12 : 8,
+              offset: Offset(0, isPrimary ? 4 : 2),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                // Icon with subtle accent color background
+                Container(
+                  width: iconSize,
+                  height: iconSize,
+                  decoration: BoxDecoration(
+                    color: iconBgColor, // Subtle tint, not full container
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: iconColor, // Primary/secondary for icon
+                    size: iconInnerSize,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                ),
+              ],
+            ),
+            SizedBox(height: isPrimary ? 24 : 20),
+            // Larger title (24px)
+            Text(
+              title,
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                height: 1.2,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Subtitle with better spacing
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+            SizedBox(height: isPrimary ? 20 : 16),
+            // Button using primary/secondary colors (CTA)
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: FilledButton(
+                onPressed: onTap,
+                style: FilledButton.styleFrom(
+                  backgroundColor: buttonColor,
+                  foregroundColor: onButtonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  isPrimary ? 'Start moving' : 'Book laundry',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Other service row - Enhanced with refined borders and pill badge
+  Widget _buildOtherServiceRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String subtitle,
+  }) {
+    final mutedColor = Theme.of(context).textTheme.bodySmall?.color;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.5),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          // Smaller, more refined icon
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: mutedColor?.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: mutedColor,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: mutedColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Pill-shaped "Coming soon" badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: mutedColor?.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20), // Pill shape
+            ),
+            child: Text(
+              'Coming soon',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: mutedColor,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -822,7 +817,7 @@ class HomeScreen extends StatelessWidget {
                 Icon(
                   Icons.star,
                   size: 14,
-                  color: const Color(0xFFFFD700), // Gold for ratings
+                  color: Theme.of(context).colorScheme.secondary, // Orange for ratings
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -980,9 +975,9 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 6),
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.star,
-                  color: AppColors.accent,
+                  color: Theme.of(context).colorScheme.secondary,
                   size: 14,
                 ),
                 const SizedBox(width: 4),
@@ -1127,7 +1122,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Featured Property card - large card for properties
+  // Featured Property card - Using Material 3 colors
   Widget _buildFeaturedPropertyCard(
     BuildContext context,
     String title,
@@ -1135,18 +1130,23 @@ class HomeScreen extends StatelessWidget {
     String price,
     String rating,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = colorScheme.primary;
+    
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        // Consistent card color - all cards use surface/cardColor
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).brightness == Brightness.dark
+            color: isDark
                 ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: 8,
+                : Colors.black.withOpacity(0.08),
+            blurRadius: 12,
             offset: const Offset(0, 2),
             spreadRadius: 0,
           ),
@@ -1158,73 +1158,77 @@ class HomeScreen extends StatelessWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              // Use primary color with opacity for icon background
+              color: primaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.home,
-              color: Theme.of(context).colorScheme.primary,
+              color: primaryColor,
               size: 40,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 16,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Theme.of(context).textTheme.titleLarge?.color,
+                    height: 1.3,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Icon(
                       Icons.location_on,
                       size: 14,
-                      color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF6B7280),
+                      color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      location,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF6B7280),
+                    Expanded(
+                      child: Text(
+                        location,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Price using Material 3 primary color
                     Text(
                       price,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.primary,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.onPrimaryContainer,
                       ),
                     ),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.star,
-                          color: AppColors.accent,
-                          size: 14,
+                          color: Theme.of(context).colorScheme.secondary, // Orange star
+                          size: 16,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           rating,
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).textTheme.titleLarge?.color,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ],
@@ -1234,10 +1238,11 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 8),
           Icon(
             Icons.chevron_right,
-            color: Theme.of(context).textTheme.bodySmall?.color ?? const Color(0xFF9CA3AF),
-            size: 24,
+            color: Theme.of(context).textTheme.bodySmall?.color,
+            size: 20,
           ),
         ],
       ),
@@ -1290,9 +1295,9 @@ class HomeScreen extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.star,
-                    color: AppColors.accent,
+                    color: Theme.of(context).colorScheme.secondary,
                     size: 12,
                   ),
                   const SizedBox(width: 2),
