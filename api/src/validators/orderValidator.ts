@@ -32,6 +32,24 @@ const laundryDetailsSchema = Joi.object({
   }),
   quantity: Joi.number().integer().min(1).max(100).optional(),
   items: Joi.array().items(Joi.string().min(1).max(50)).max(20).optional(),
+  serviceLocationId: Joi.string().uuid().optional().messages({
+    'string.guid': 'Service location ID must be a valid UUID',
+  }),
+  pickupLocation: locationSchema.optional(),
+  dropoffLocation: locationSchema.optional(),
+}).custom((value, helpers) => {
+  // At least one location method must be provided
+  const hasServiceLocation = !!value.serviceLocationId;
+  const hasPickupLocation = !!value.pickupLocation;
+  const hasDropoffLocation = !!value.dropoffLocation;
+  
+  if (!hasServiceLocation && !hasPickupLocation && !hasDropoffLocation) {
+    return helpers.error('any.custom', {
+      message: 'Either serviceLocationId, pickupLocation, or dropoffLocation must be provided',
+    });
+  }
+  
+  return value;
 });
 
 const propertyBookingDetailsSchema = Joi.object({

@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { CreateUserInput } from '../models/User';
 
 export const registerSchema = Joi.object<CreateUserInput>({
-  email: Joi.string().email().required().lowercase().messages({
+  email: Joi.string().email({ tlds: { allow: false } }).required().lowercase().messages({
     'string.email': 'Invalid email format',
     'any.required': 'Email is required',
   }),
@@ -27,7 +27,7 @@ export const registerSchema = Joi.object<CreateUserInput>({
 });
 
 export const loginSchema = Joi.object({
-  email: Joi.string().email().required().lowercase().messages({
+  email: Joi.string().email({ tlds: { allow: false } }).required().lowercase().messages({
     'string.email': 'Invalid email format',
     'any.required': 'Email is required',
   }),

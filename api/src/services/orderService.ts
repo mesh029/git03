@@ -1,13 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database';
 import {
-  Order,
   OrderType,
   OrderStatus,
   CreateOrderInput,
   OrderResponse,
   Location,
-  CleaningDetails,
+  OrderDetails,
   LaundryDetails,
   PropertyBookingDetails,
 } from '../models/Order';
@@ -16,6 +14,9 @@ import {
   NotFoundError,
   AuthorizationError,
 } from '../utils/errors';
+import { mapboxService } from './mapboxService';
+import { messageService } from './messageService';
+import { logWarn } from '../utils/logger';
 
 interface OrderRow {
   id: string;
@@ -46,7 +47,7 @@ export class OrderService {
         longitude: row.location_longitude,
         label: row.location_label,
       },
-      details: row.details,
+      details: row.details as unknown as OrderDetails,
       created_at: row.created_at.toISOString(),
       updated_at: row.updated_at.toISOString(),
       cancelled_at: row.cancelled_at?.toISOString(),
@@ -80,6 +81,26 @@ export class OrderService {
         field: 'location.label',
       });
     }
+
+    // Validate Kenya service area bounds
+    const validation = mapboxService.validateCoordinates(
+      location.latitude,
+      location.longitude
+    );
+
+    if (!validation.valid) {
+      throw new ValidationError(validation.errors.join(', '), {
+        field: 'location',
+        code: 'INVALID_COORDINATES',
+      });
+    }
+
+    if (!validation.inKenya) {
+      throw new ValidationError('Location is outside Kenya service area', {
+        field: 'location',
+        code: 'OUTSIDE_SERVICE_AREA',
+      });
+    }
   }
 
   /**
@@ -87,7 +108,7 @@ export class OrderService {
    */
   private async validatePropertyBooking(
     details: PropertyBookingDetails,
-    userId: string
+    _userId: string
   ): Promise<void> {
     const { propertyId, checkIn, checkOut, guests } = details;
 
@@ -175,11 +196,62 @@ export class OrderService {
   }
 
   /**
+   * Handle laundry order with service location
+   */
+  private async handleLaundryOrderLocation(
+    details: LaundryDetails,
+    inputLocation: Location
+  ): Promise<Location> {
+    // If service location ID is provided, use that location
+    if (details.serviceLocationId) {
+      const serviceLocationResult = await pool.query(
+        'SELECT location_latitude, location_longitude, address, area_label FROM service_locations WHERE id = $1 AND is_active = TRUE',
+        [details.serviceLocationId]
+      );
+
+      if (serviceLocationResult.rows.length === 0) {
+        throw new ValidationError('Service location not found or inactive', {
+          code: 'SERVICE_LOCATION_NOT_FOUND',
+        });
+      }
+
+      const serviceLocation = serviceLocationResult.rows[0];
+      return {
+        latitude: serviceLocation.location_latitude,
+        longitude: serviceLocation.location_longitude,
+        label: `${serviceLocation.area_label}, ${serviceLocation.address}`,
+      };
+    }
+
+    // If custom pickup/dropoff locations provided, use those
+    if (details.pickupLocation) {
+      this.validateLocation(details.pickupLocation);
+      return details.pickupLocation;
+    }
+
+    if (details.dropoffLocation) {
+      this.validateLocation(details.dropoffLocation);
+      return details.dropoffLocation;
+    }
+
+    // Otherwise use the provided location
+    return inputLocation;
+  }
+
+  /**
    * Create a new order
    */
   async createOrder(input: CreateOrderInput, userId: string): Promise<OrderResponse> {
-    // Validate location
-    this.validateLocation(input.location);
+    // Handle laundry orders with service locations
+    let orderLocation = input.location;
+    
+    if (input.type === OrderType.LAUNDRY) {
+      const laundryDetails = input.details as LaundryDetails;
+      orderLocation = await this.handleLaundryOrderLocation(laundryDetails, input.location);
+    } else {
+      // Validate location for other order types
+      this.validateLocation(input.location);
+    }
 
     const client = await pool.connect();
 
@@ -198,9 +270,9 @@ export class OrderService {
           userId,
           input.type,
           OrderStatus.PENDING,
-          input.location.latitude,
-          input.location.longitude,
-          input.location.label,
+          orderLocation.latitude,
+          orderLocation.longitude,
+          orderLocation.label,
           JSON.stringify(input.details),
         ]
       );
@@ -229,6 +301,18 @@ export class OrderService {
       }
 
       await client.query('COMMIT');
+
+      // Auto-create conversation for order (outside transaction to avoid blocking)
+      try {
+        await messageService.createOrderConversation(order.id, userId);
+      } catch (error) {
+        // Log but don't fail order creation if conversation creation fails
+        logWarn('Failed to create order conversation', {
+          orderId: order.id,
+          userId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
 
       return this.toOrderResponse(order);
     } catch (error) {

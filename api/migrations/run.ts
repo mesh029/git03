@@ -4,11 +4,6 @@ import pool from '../src/config/database';
 
 const migrationsDir = path.join(__dirname);
 
-interface Migration {
-  name: string;
-  file: string;
-}
-
 async function runMigrations() {
   try {
     // Create migrations table if it doesn't exist

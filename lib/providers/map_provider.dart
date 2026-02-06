@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../config/map_config.dart';
 import '../models/map_location.dart';
 import '../services/map/location_service.dart';
+import '../services/map/location_name_service.dart';
 
 /// Provider for map state and location management
 class MapProvider extends ChangeNotifier {
@@ -12,12 +13,16 @@ class MapProvider extends ChangeNotifier {
   List<MapLocation> _placeholderLocations = [];
   bool _isLoadingLocation = false;
   String? _locationError;
+  String? _locationName;
+  bool _isLoadingLocationName = false;
 
   LatLng? get userLocation => _userLocation;
   MapLocation? get selectedPickupLocation => _selectedPickupLocation;
   List<MapLocation> get placeholderLocations => _placeholderLocations;
   bool get isLoadingLocation => _isLoadingLocation;
   String? get locationError => _locationError;
+  String? get locationName => _locationName;
+  bool get isLoadingLocationName => _isLoadingLocationName;
   bool get hasUserLocation => _userLocation != null;
 
   MapProvider() {
@@ -79,11 +84,17 @@ class MapProvider extends ChangeNotifier {
         // Success! Use actual GPS location
         _userLocation = LatLng(position.latitude, position.longitude);
         _locationError = null; // Clear any previous errors - GPS is working!
+        
+        // Fetch location name from Mapbox API
+        _updateLocationName(position.latitude, position.longitude);
       } else {
         // Couldn't get location - use a reasonable default that allows map to show
         // Use a central location (Nairobi, Kenya) as fallback so map is always visible
         // This allows users to browse even without GPS
         _userLocation = const LatLng(-1.2921, 36.8219); // Nairobi, Kenya (central location)
+        
+        // Fetch location name for default location too
+        _updateLocationName(-1.2921, 36.8219);
         
         // Check why we couldn't get location
         final serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -103,11 +114,37 @@ class MapProvider extends ChangeNotifier {
       // Error getting location - use fallback so map still shows
       _userLocation = const LatLng(-1.2921, 36.8219); // Nairobi, Kenya as fallback
       _locationError = 'Using default location. Tap to retry.';
+      _updateLocationName(-1.2921, 36.8219);
     }
 
     _isLoadingLocation = false;
     // Always notify to ensure markers are visible
     notifyListeners();
+  }
+
+  /// Update location name from Mapbox API
+  Future<void> _updateLocationName(double latitude, double longitude) async {
+    _isLoadingLocationName = true;
+    notifyListeners();
+
+    try {
+      // Use Mapbox API via backend to get location name
+      final name = await LocationNameService.getLocationName(latitude, longitude);
+      _locationName = name;
+    } catch (e) {
+      // Fallback to sync method if API fails
+      _locationName = LocationNameService.getLocationNameSync(latitude, longitude);
+    } finally {
+      _isLoadingLocationName = false;
+      notifyListeners();
+    }
+  }
+
+  /// Refresh location name (useful when location changes)
+  Future<void> refreshLocationName() async {
+    if (_userLocation != null) {
+      await _updateLocationName(_userLocation!.latitude, _userLocation!.longitude);
+    }
   }
 
   /// Set selected pickup location from map tap
@@ -118,7 +155,28 @@ class MapProvider extends ChangeNotifier {
       name: name ?? 'Selected Location',
       type: MapLocationType.pickupSelection,
     );
+    // Fetch location name asynchronously
+    _updateSelectedLocationName(location.latitude, location.longitude);
     notifyListeners();
+  }
+
+  /// Update selected location name from Mapbox API
+  Future<void> _updateSelectedLocationName(double latitude, double longitude) async {
+    try {
+      final name = await LocationNameService.getLocationName(latitude, longitude);
+      if (_selectedPickupLocation != null) {
+        _selectedPickupLocation = MapLocation(
+          latitude: _selectedPickupLocation!.latitude,
+          longitude: _selectedPickupLocation!.longitude,
+          name: name,
+          type: _selectedPickupLocation!.type,
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      // If API fails, keep the default name
+      // Fallback is already handled in LocationNameService
+    }
   }
 
   /// Clear selected pickup location

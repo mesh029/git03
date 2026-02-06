@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
 import '../providers/auth_provider.dart';
+import '../services/api/api_config.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -43,10 +44,55 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Invalid email or password'),
-          backgroundColor: Theme.of(context).colorScheme.error,
+      final errorMessage = authProvider.lastError ?? 'Login failed. Please try again.';
+      // Show detailed error in a dialog for better visibility
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Failed'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(errorMessage),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 8),
+                const Text(
+                  'Debug Info:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text('API URL: ${ApiConfig.baseUrl}'),
+                Text('Login Endpoint: ${ApiConfig.loginUrl}'),
+                const SizedBox(height: 8),
+                const Text(
+                  'To see detailed logs:\n1. Open Chrome DevTools (F12)\n2. Go to Console tab\n3. Look for logs with 🔐 📤 📥 ❌',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Open browser console instructions
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Press F12 to open Chrome DevTools Console'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+              },
+              child: const Text('Show Console Help'),
+            ),
+          ],
         ),
       );
     }
@@ -313,49 +359,50 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // Test Users Section - for development/testing
+  // These match the seeded users from the API database
   Widget _buildTestUsersSection(BuildContext context) {
     final testUsers = [
       {
-        'name': 'Meshack',
-        'email': 'meshack@example.com',
-        'password': 'password',
-        'type': 'Premium (All Services)',
+        'name': 'John Doe',
+        'email': 'customer1@juax.test',
+        'password': 'Test123!@#',
+        'type': 'Customer (Freemium)',
         'color': Theme.of(context).colorScheme.primary,
       },
       {
-        'name': 'Premium Saka',
-        'email': 'premiumsaka@example.com',
-        'password': 'password',
-        'type': 'Premium (Saka Keja)',
+        'name': 'Jane Smith',
+        'email': 'customer2@juax.test',
+        'password': 'Test123!@#',
+        'type': 'Customer (Premium)',
         'color': Colors.blue,
       },
       {
-        'name': 'Premium Fresh',
-        'email': 'premiumfresh@example.com',
-        'password': 'password',
-        'type': 'Premium (Fresh Keja)',
-        'color': Colors.orange,
-      },
-      {
-        'name': 'Freemium',
-        'email': 'freemium@example.com',
-        'password': 'password',
+        'name': 'Freemium User',
+        'email': 'freemium@juax.test',
+        'password': 'Test123!@#',
         'type': 'Freemium',
         'color': Colors.grey,
       },
       {
-        'name': 'Admin',
-        'email': 'admin@juax.com',
-        'password': 'password',
+        'name': 'Agent Williams',
+        'email': 'agent1@juax.test',
+        'password': 'Agent123!@#',
+        'type': 'Agent',
+        'color': Colors.teal,
+      },
+      {
+        'name': 'Admin User',
+        'email': 'admin@juax.test',
+        'password': 'Admin123!@#',
         'type': 'Admin',
         'color': Colors.purple,
       },
       {
-        'name': 'Agent',
-        'email': 'agent@juax.com',
-        'password': 'password',
-        'type': 'Agent (Listings)',
-        'color': Colors.teal,
+        'name': 'Super User',
+        'email': 'superuser@juax.test',
+        'password': 'Super123!@#',
+        'type': 'Admin + Agent',
+        'color': Colors.deepPurple,
       },
     ];
 
@@ -426,10 +473,42 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         } else if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Login failed. Please try again.'),
-              backgroundColor: Theme.of(context).colorScheme.error,
+          final errorMessage = authProvider.lastError ?? 'Login failed. Please try again.';
+          // Show detailed error in a dialog
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Login Failed'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(errorMessage),
+                    const SizedBox(height: 16),
+                    const Divider(),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Debug Info:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text('API URL: ${ApiConfig.baseUrl}'),
+                    Text('Login Endpoint: ${ApiConfig.loginUrl}'),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'To see detailed logs:\n1. Press F12 to open Chrome DevTools\n2. Go to Console tab\n3. Look for logs with 🔐 📤 📥 ❌',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
             ),
           );
         }

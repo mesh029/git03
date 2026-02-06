@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import '../services/local_storage_service.dart';
 import '../models/message_model.dart';
 import '../models/user_model.dart';
-import 'auth_provider.dart' show DummyUsers;
 
 // Dummy messages database - replace with API later
 class DummyMessages {
@@ -191,12 +190,10 @@ class DummyMessages {
     return getConversationId(userId1, userId2);
   }
 
-  static User getUserById(String userId) {
-    try {
-      return DummyUsers.users.firstWhere((user) => user.id == userId);
-    } catch (e) {
-      return DummyUsers.users.first;
-    }
+  static User? getUserById(String userId) {
+    // TODO: Replace with API call to get user by ID
+    // For now, return null - this will be replaced when we integrate user API
+    return null;
   }
 }
 

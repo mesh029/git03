@@ -6,6 +6,9 @@ export enum OrderType {
 
 export enum OrderStatus {
   PENDING = 'pending',
+  ASSIGNED = 'assigned',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
   CANCELLED = 'cancelled',
 }
 
@@ -24,6 +27,9 @@ export interface LaundryDetails {
   serviceType: string;
   quantity?: number;
   items?: string[];
+  serviceLocationId?: string; // ID of pickup/dropoff station if user didn't select custom location
+  pickupLocation?: Location; // Custom pickup location (if provided)
+  dropoffLocation?: Location; // Custom dropoff location (if provided)
 }
 
 export interface PropertyBookingDetails {

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import pool from '../config/database';
-import { AuthorizationError, NotFoundError } from '../utils/errors';
 
 /**
  * Check if user owns a resource
@@ -98,6 +97,11 @@ export const authorizeAdmin = (
 };
 
 /**
+ * Check if user is admin (alias for consistency)
+ */
+export const requireAdmin = authorizeAdmin;
+
+/**
  * Check if user is agent
  */
 export const authorizeAgent = (
@@ -129,6 +133,56 @@ export const authorizeAgent = (
         });
         return;
       }
+      next();
+    })
+    .catch(next);
+};
+
+/**
+ * Check if user is agent or admin
+ */
+export const authorizeAgentOrAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      error: {
+        code: 'AUTH_REQUIRED',
+        message: 'Authentication required',
+      },
+    });
+    return;
+  }
+
+  // Check agent or admin status from database
+  pool.query('SELECT is_agent, is_admin FROM users WHERE id = $1', [req.user.id])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        res.status(403).json({
+          success: false,
+          error: {
+            code: 'FORBIDDEN',
+            message: 'Agent or Admin access required',
+          },
+        });
+        return;
+      }
+
+      const user = result.rows[0];
+      if (!user.is_agent && !user.is_admin) {
+        res.status(403).json({
+          success: false,
+          error: {
+            code: 'FORBIDDEN',
+            message: 'Agent or Admin access required',
+          },
+        });
+        return;
+      }
+
       next();
     })
     .catch(next);

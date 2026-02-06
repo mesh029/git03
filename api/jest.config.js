@@ -12,6 +12,18 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   transform: {
-    '^.+\\.ts$': 'ts-jest'
-  }
+    '^.+\\.ts$': ['ts-jest', {
+      isolatedModules: true
+    }]
+  },
+  setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts'],
+  testTimeout: 10000, // 10 seconds per test (reduced from 30s)
+  // Fail fast - stop on first failure
+  bail: 1,
+  // Detect open handles to prevent hanging
+  detectOpenHandles: true,
+  // Force exit after tests complete
+  forceExit: true,
+  // Verbose output for better error visibility
+  verbose: true
 };

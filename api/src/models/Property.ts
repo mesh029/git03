@@ -34,6 +34,17 @@ export interface CreatePropertyInput {
   images?: string[];
 }
 
+export interface UpdatePropertyInput {
+  title?: string;
+  location_latitude?: number;
+  location_longitude?: number;
+  area_label?: string;
+  price_label?: string;
+  amenities?: string[];
+  house_rules?: string[];
+  images?: string[];
+}
+
 export interface PropertyResponse {
   id: string;
   agent_id: string;

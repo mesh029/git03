@@ -15,17 +15,10 @@ class DummyOrders {
     return List.from(allOrders)..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
-  static User getUserForOrder(String userId) {
-    try {
-      return DummyUsers.users.firstWhere(
-        (user) => user.id == userId,
-      );
-    } catch (e) {
-      // Fallback to first user if not found
-      return DummyUsers.users.isNotEmpty 
-          ? DummyUsers.users.first 
-          : throw Exception('No users found');
-    }
+  static User? getUserForOrder(String userId) {
+    // TODO: Replace with API call to get user by ID
+    // For now, return null - this will be replaced when we integrate user API
+    return null;
   }
 
   static final List<Order> allOrders = [

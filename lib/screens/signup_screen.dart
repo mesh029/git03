@@ -53,8 +53,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Email already exists'),
+          content: const Text('Registration failed. Email may already exist or password is too weak.'),
           backgroundColor: Theme.of(context).colorScheme.error,
+          duration: const Duration(seconds: 3),
         ),
       );
     }

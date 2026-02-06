@@ -9,6 +9,8 @@ declare global {
       user?: {
         id: string;
         email: string;
+        isAdmin?: boolean;
+        isAgent?: boolean;
       };
     }
   }
@@ -36,10 +38,15 @@ export const authenticate = async (
     // Verify token
     const payload = authService.verifyToken(token);
 
+    // Get user details from database (including roles)
+    const user = await authService.getUserById(payload.sub);
+
     // Attach user to request
     req.user = {
-      id: payload.sub,
-      email: payload.email,
+      id: user.id,
+      email: user.email,
+      isAdmin: user.is_admin,
+      isAgent: user.is_agent,
     };
 
     next();
@@ -65,7 +72,7 @@ export const authenticate = async (
  */
 export const optionalAuth = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
@@ -74,10 +81,17 @@ export const optionalAuth = async (
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       const payload = authService.verifyToken(token);
-      req.user = {
-        id: payload.sub,
-        email: payload.email,
-      };
+      try {
+        const user = await authService.getUserById(payload.sub);
+        req.user = {
+          id: user.id,
+          email: user.email,
+      isAdmin: user.is_admin,
+      isAgent: user.is_agent,
+        };
+      } catch (error) {
+        // Ignore errors for optional auth
+      }
     }
 
     next();

@@ -101,10 +101,8 @@ class HomeScreen extends StatelessWidget {
     return LocationNameService.isInKisumuArea(latitude, longitude);
   }
 
-  /// Get location name from coordinates using LocationNameService
-  String _getLocationName(double? latitude, double? longitude) {
-    return LocationNameService.getLocationName(latitude, longitude);
-  }
+  // Location name is now fetched from MapProvider (which uses Mapbox API)
+  // No need for local method anymore
 
   @override
   Widget build(BuildContext context) {
@@ -127,12 +125,13 @@ class HomeScreen extends StatelessWidget {
                         final userName = user?.name ?? 'Guest';
                         final greeting = _getGreeting();
                         
-                        // Get user's actual location
-                        final userLocation = mapProvider.userLocation;
-                        final locationName = _getLocationName(
-                          userLocation?.latitude,
-                          userLocation?.longitude,
-                        );
+                        // Get location name from MapProvider (fetched from Mapbox API)
+                        final locationName = mapProvider.isLoadingLocationName
+                            ? 'Getting location...'
+                            : (mapProvider.locationName ?? 
+                               (mapProvider.isLoadingLocation 
+                                   ? 'Getting location...' 
+                                   : 'Current Location'));
                         
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,9 +147,7 @@ class HomeScreen extends StatelessWidget {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
-                                    mapProvider.isLoadingLocation 
-                                        ? 'Getting location...'
-                                        : locationName,
+                                    locationName,
                                     style: Theme.of(context).textTheme.bodySmall,
                                   ),
                                 ),

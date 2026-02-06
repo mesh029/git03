@@ -1,7 +1,9 @@
 import 'package:geolocator/geolocator.dart';
+import '../../services/api/location_service.dart';
 
 /// Service for getting location names from coordinates
-/// Uses coordinate-based detection for major Kenyan cities/towns
+/// Uses Mapbox API via backend for accurate location names
+/// Falls back to coordinate-based detection if API is unavailable
 class LocationNameService {
   // Major Kenyan cities/towns with their coordinates
   static const List<Map<String, dynamic>> _kenyanLocations = [
@@ -28,7 +30,63 @@ class LocationNameService {
   ];
 
   /// Get the nearest location name from coordinates
-  static String getLocationName(double? latitude, double? longitude) {
+  /// Uses Mapbox API via backend, falls back to coordinate-based detection
+  static Future<String> getLocationName(double? latitude, double? longitude) async {
+    if (latitude == null || longitude == null) {
+      return 'Getting location...';
+    }
+
+    // Try to get location name from Mapbox API first
+    try {
+      final locationName = await locationService.getLocationName(latitude, longitude);
+      // Check if we got a valid name (not coordinates or default)
+      // Coordinates look like "-1.2921, 36.8219" - check if it's NOT that format
+      final isCoordinates = RegExp(r'^-?\d+\.?\d+,\s*-?\d+\.?\d+$').hasMatch(locationName.trim());
+      if (locationName.isNotEmpty && 
+          locationName != 'Current Location' &&
+          !isCoordinates) {
+        return locationName;
+      }
+      // If API returned coordinates (fallback), use our own fallback instead
+    } catch (e) {
+      // API failed, fall back to coordinate-based detection
+      // Continue to fallback logic below
+    }
+
+    // Fallback: Check if in Kisumu area first (for detailed sub-locations)
+    if (_isInKisumuArea(latitude, longitude)) {
+      return _getKisumuSubLocation(latitude, longitude);
+    }
+
+    // Fallback: Find nearest major city/town
+    String nearestLocation = 'Current Location';
+    double minDistance = double.infinity;
+
+    for (final location in _kenyanLocations) {
+      final distance = Geolocator.distanceBetween(
+        latitude,
+        longitude,
+        location['lat'] as double,
+        location['lon'] as double,
+      ) / 1000; // Convert to km
+
+      // If within 30km of a major city, use that city name
+      if (distance < 30 && distance < minDistance) {
+        minDistance = distance;
+        nearestLocation = location['name'] as String;
+      }
+    }
+
+    // If not near any major city, try to determine region
+    if (minDistance == double.infinity) {
+      return _getRegionName(latitude, longitude);
+    }
+
+    return nearestLocation;
+  }
+
+  /// Synchronous version for backward compatibility (uses fallback only)
+  static String getLocationNameSync(double? latitude, double? longitude) {
     if (latitude == null || longitude == null) {
       return 'Getting location...';
     }

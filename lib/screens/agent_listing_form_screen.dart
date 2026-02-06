@@ -122,9 +122,13 @@ class _AgentListingFormScreenState extends State<AgentListingFormScreen> {
       MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
     );
     if (picked == null) return;
+    
+    // Fetch location name from Mapbox API
+    final areaLabel = await LocationNameService.getLocationName(picked.latitude, picked.longitude);
+    
     setState(() {
       _pickedLocation = picked;
-      _areaLabel = LocationNameService.getLocationName(picked.latitude, picked.longitude);
+      _areaLabel = areaLabel;
     });
   }
 

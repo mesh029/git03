@@ -39,6 +39,7 @@ class LocationPickerScreen extends StatelessWidget {
               child: Consumer<MapProvider>(
                 builder: (context, mapProvider, _) {
                   final selected = mapProvider.getSelectedPickupLatLng();
+                  final selectedLocation = mapProvider.selectedPickupLocation;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -65,8 +66,11 @@ class LocationPickerScreen extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
+                                  selectedLocation?.name ?? 
                                   '${selected.latitude.toStringAsFixed(5)}, ${selected.longitude.toStringAsFixed(5)}',
                                   style: Theme.of(context).textTheme.bodyMedium,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],

@@ -11,7 +11,7 @@ import 'profile_screen.dart';
 import 'admin_orders_screen.dart';
 import 'agent_dashboard_screen.dart';
 import '../providers/messages_provider.dart' show DummyMessages;
-import '../providers/auth_provider.dart' show DummyUsers;
+import '../providers/auth_provider.dart';
 
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key});
@@ -129,6 +129,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
               final conversation = messagesProvider.conversations[index];
               final otherUserId = conversation.getOtherParticipantId(authProvider.currentUser!.id);
               final otherUser = DummyMessages.getUserById(otherUserId);
+              
+              // Skip conversations where user is not found (will be fixed with API integration)
+              if (otherUser == null) {
+                return const SizedBox.shrink();
+              }
+              
               final lastMessage = conversation.lastMessageId != null
                   ? DummyMessages.allMessages.firstWhere(
                       (msg) => msg.id == conversation.lastMessageId,
@@ -338,57 +344,36 @@ class _MessagesScreenState extends State<MessagesScreen> {
         title: Text('Start New Conversation', style: Theme.of(context).textTheme.titleLarge),
         content: SizedBox(
           width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: DummyUsers.users.where((u) => u.id != currentUserId).length,
-            itemBuilder: (context, index) {
-              final users = DummyUsers.users.where((u) => u.id != currentUserId).toList();
-              if (index >= users.length) return const SizedBox.shrink();
-              final user = users[index];
-              
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: user.isAdmin
-                      ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                      : Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  child: Icon(
-                    user.isAdmin ? Icons.admin_panel_settings : Icons.person,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                title: Text(user.name),
-                subtitle: user.isAdmin ? const Text('Admin') : Text(user.email),
-                onTap: () {
-                  Navigator.pop(context);
-                  final conversationId = DummyMessages.getConversationId(currentUserId, user.id);
-                  final conversation = Conversation(
-                    id: conversationId,
-                    participant1Id: currentUserId,
-                    participant2Id: user.id,
-                  );
-                  
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatDetailScreen(
-                        conversation: conversation,
-                        otherUser: user,
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 20),
+              Icon(
+                Icons.info_outline,
+                size: 48,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'User list will be available after API integration',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Close'),
           ),
         ],
       ),
     );
+    
+    // TODO: Replace with API call to get list of users
+    // User list will be available after API integration
   }
 }
 

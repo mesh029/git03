@@ -149,12 +149,12 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                   separatorBuilder: (context, index) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final order = filteredOrders[index];
-                    try {
-                      final user = DummyOrders.getUserForOrder(order.userId);
-                      return _buildAdminOrderCard(context, order, user);
-                    } catch (e) {
+                    final user = DummyOrders.getUserForOrder(order.userId);
+                    if (user == null) {
+                      // Skip orders where user is not found (will be fixed with API integration)
                       return const SizedBox.shrink();
                     }
+                    return _buildAdminOrderCard(context, order, user);
                   },
                 ),
               ),
